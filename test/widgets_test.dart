@@ -1,0 +1,83 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:dindin/theme/app_colors.dart';
+import 'package:dindin/theme/app_theme.dart';
+import 'package:dindin/widgets/widgets.dart';
+
+void main() {
+  testWidgets('ThemeData is configured properly', (tester) async {
+    final theme = AppTheme.theme;
+
+    expect(theme.scaffoldBackgroundColor, AppColors.background);
+    expect(theme.colorScheme.primary, AppColors.primary);
+    expect(theme.colorScheme.surface, AppColors.surface);
+    expect(theme.appBarTheme.backgroundColor, AppColors.background);
+    expect(theme.appBarTheme.elevation, 0);
+  });
+
+  testWidgets('FlatCard renders child and responds to onTap', (tester) async {
+    var tapped = false;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.theme,
+        home: Scaffold(
+          body: FlatCard(
+            onTap: () => tapped = true,
+            child: const Text('Card Content'),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Card Content'), findsOneWidget);
+    await tester.tap(find.text('Card Content'));
+    await tester.pumpAndSettle();
+    expect(tapped, isTrue);
+  });
+
+  testWidgets('FlatButton renders and executes onPressed with tactile tap',
+      (tester) async {
+    var pressed = false;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.theme,
+        home: Scaffold(
+          body: FlatButton(
+            text: 'Click Me',
+            onPressed: () => pressed = true,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Click Me'), findsOneWidget);
+    await tester.tap(find.text('Click Me'));
+    await tester.pumpAndSettle();
+    expect(pressed, isTrue);
+  });
+
+  testWidgets('CurrencyBadge formats and displays correct values',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.theme,
+        home: const Scaffold(
+          body: Column(
+            children: [
+              CurrencyBadge.income(amount: 1500.50),
+              CurrencyBadge.expense(amount: 320.0),
+              CurrencyBadge.neutral(amount: 50.0),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('+ R\$ 1.500,50'), findsOneWidget);
+    expect(find.text('+ R\$ 320,00'), findsNothing);
+    expect(find.text('- R\$ 320,00'), findsOneWidget);
+    expect(find.text('R\$ 50,00'), findsOneWidget);
+  });
+}
