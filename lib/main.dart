@@ -1,19 +1,44 @@
 import 'package:flutter/material.dart';
+import 'pages/home_page.dart';
+import 'state/app_state.dart';
+import 'state/app_state_scope.dart';
+import 'theme/app_theme.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const DinDinApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class DinDinApp extends StatefulWidget {
+  const DinDinApp({super.key});
+
+  @override
+  State<DinDinApp> createState() => _DinDinAppState();
+}
+
+class _DinDinAppState extends State<DinDinApp> {
+  late final AppState _appState;
+
+  @override
+  void initState() {
+    super.initState();
+    _appState = AppState();
+  }
+
+  @override
+  void dispose() {
+    _appState.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return AppStateScope(
+      notifier: _appState,
+      child: MaterialApp(
+        title: 'DinDin',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.theme,
+        home: const HomePage(),
       ),
     );
   }
