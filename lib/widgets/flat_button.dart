@@ -10,13 +10,13 @@ class FlatButton extends StatefulWidget {
     this.child,
     this.icon,
     this.backgroundColor = AppColors.primary,
-    this.textColor = AppColors.text,
-    this.borderColor = AppColors.border,
+    this.textColor,
+    this.borderColor,
     this.borderWidth = AppTheme.borderWidth,
-    this.borderRadius = AppTheme.borderRadius,
+    this.borderRadius = AppTheme.borderRadiusSmall,
     this.shadowOffset = AppTheme.shadowOffset,
-    this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-    this.fontSize = 16,
+    this.padding = const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
+    this.fontSize = 15,
     this.isExpanded = false,
     this.height,
   }) : assert(
@@ -29,8 +29,8 @@ class FlatButton extends StatefulWidget {
   final Widget? child;
   final Widget? icon;
   final Color backgroundColor;
-  final Color textColor;
-  final Color borderColor;
+  final Color? textColor;
+  final Color? borderColor;
   final double borderWidth;
   final double borderRadius;
   final Offset shadowOffset;
@@ -66,79 +66,93 @@ class _FlatButtonState extends State<FlatButton> {
 
   @override
   Widget build(BuildContext context) {
-    final currentOffset = _isPressed && _isEnabled
-        ? widget.shadowOffset
-        : Offset.zero;
-
-    final currentShadow = _isPressed || !_isEnabled
-        ? Offset.zero
-        : widget.shadowOffset;
+    // Intelligent text/icon contrast
+    final effectiveTextColor = widget.textColor ??
+        (widget.backgroundColor.computeLuminance() < 0.45
+            ? AppColors.surface
+            : AppColors.text);
 
     Widget buttonContent = widget.child ??
         Text(
           widget.text!,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: widget.textColor,
+            color: effectiveTextColor,
             fontSize: widget.fontSize,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.2,
           ),
           textAlign: TextAlign.center,
         );
 
     if (widget.icon != null) {
       buttonContent = Row(
-        mainAxisSize: widget.isExpanded ? MainAxisSize.max : MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          widget.icon!,
+          IconTheme(
+            data: IconThemeData(
+              color: effectiveTextColor,
+              size: widget.fontSize + 2,
+            ),
+            child: widget.icon!,
+          ),
           const SizedBox(width: 8),
           Flexible(
-            fit: widget.isExpanded ? FlexFit.tight : FlexFit.loose,
+            fit: FlexFit.loose,
             child: buttonContent,
           ),
         ],
       );
     }
 
-    final effectiveColor = _isEnabled
+    final effectiveBgColor = _isEnabled
         ? widget.backgroundColor
-        : widget.backgroundColor.withValues(alpha: 0.5);
+        : widget.backgroundColor.withValues(alpha: 0.4);
 
-    final effectiveBorderColor = _isEnabled
-        ? widget.borderColor
-        : widget.borderColor.withValues(alpha: 0.5);
+    final effectiveBorderColor = widget.borderColor ??
+        (widget.backgroundColor == AppColors.surface
+            ? AppColors.border
+            : Colors.transparent);
 
-    Widget container = AnimatedContainer(
-      duration: const Duration(milliseconds: 60),
-      curve: Curves.easeInOut,
-      transform: Matrix4.translationValues(
-        currentOffset.dx,
-        currentOffset.dy,
-        0,
-      ),
-      height: widget.height,
-      padding: widget.padding,
-      decoration: BoxDecoration(
-        color: effectiveColor,
-        borderRadius: BorderRadius.circular(widget.borderRadius),
-        border: Border.all(
-          color: effectiveBorderColor,
-          width: widget.borderWidth,
+    final hasShadow = widget.shadowOffset != Offset.zero &&
+        _isEnabled &&
+        widget.backgroundColor != AppColors.surface;
+
+    Widget container = AnimatedScale(
+      scale: _isPressed ? 0.98 : 1.0,
+      duration: const Duration(milliseconds: 90),
+      curve: Curves.easeOutCubic,
+      child: AnimatedOpacity(
+        opacity: _isPressed ? 0.88 : 1.0,
+        duration: const Duration(milliseconds: 90),
+        child: Container(
+          height: widget.height,
+          padding: widget.padding,
+          decoration: BoxDecoration(
+            color: effectiveBgColor,
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            border: Border.all(
+              color: effectiveBorderColor,
+              width: widget.borderWidth,
+            ),
+            boxShadow: hasShadow
+                ? [
+                    BoxShadow(
+                      color: widget.backgroundColor.withValues(alpha: 0.18),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                      spreadRadius: 0,
+                    ),
+                  ]
+                : null,
+          ),
+          child: Center(
+            widthFactor: widget.isExpanded ? null : 1.0,
+            child: buttonContent,
+          ),
         ),
-        boxShadow: currentShadow == Offset.zero
-            ? null
-            : [
-                BoxShadow(
-                  color: effectiveBorderColor,
-                  offset: currentShadow,
-                  blurRadius: 0,
-                  spreadRadius: 0,
-                ),
-              ],
-      ),
-      child: Center(
-        widthFactor: widget.isExpanded ? null : 1.0,
-        child: buttonContent,
       ),
     );
 
