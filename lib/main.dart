@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
+import 'screens/login_screen.dart';
 import 'state/app_state.dart';
 import 'state/app_state_scope.dart';
 import 'theme/app_theme.dart';
@@ -9,7 +10,12 @@ void main() {
 }
 
 class DinDinApp extends StatefulWidget {
-  const DinDinApp({super.key});
+  const DinDinApp({
+    super.key,
+    this.initialState,
+  });
+
+  final AppState? initialState;
 
   @override
   State<DinDinApp> createState() => _DinDinAppState();
@@ -17,16 +23,20 @@ class DinDinApp extends StatefulWidget {
 
 class _DinDinAppState extends State<DinDinApp> {
   late final AppState _appState;
+  late final bool _ownsState;
 
   @override
   void initState() {
     super.initState();
-    _appState = AppState();
+    _ownsState = widget.initialState == null;
+    _appState = widget.initialState ?? AppState();
   }
 
   @override
   void dispose() {
-    _appState.dispose();
+    if (_ownsState) {
+      _appState.dispose();
+    }
     super.dispose();
   }
 
@@ -38,7 +48,14 @@ class _DinDinAppState extends State<DinDinApp> {
         title: 'DinDin',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.theme,
-        home: const HomePage(),
+        home: AnimatedBuilder(
+          animation: _appState,
+          builder: (context, _) {
+            return _appState.isLoggedIn
+                ? const HomePage()
+                : LoginScreen(state: _appState);
+          },
+        ),
       ),
     );
   }
