@@ -23,13 +23,9 @@ class NewGoalModal extends StatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        side: BorderSide(
-          color: AppColors.border,
-          width: AppTheme.borderWidth,
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppTheme.borderRadiusLarge)),
       ),
       builder: (context) => NewGoalModal(
         state: state,
@@ -72,7 +68,7 @@ class _NewGoalModalState extends State<NewGoalModal> {
       context,
       message: 'Nova meta "$title" criada com sucesso!',
       type: FlatSnackBarType.success,
-      icon: Icons.savings_rounded,
+      icon: Icons.savings_outlined,
     );
   }
 
@@ -82,27 +78,40 @@ class _NewGoalModalState extends State<NewGoalModal> {
       padding: EdgeInsets.only(
         left: 20,
         right: 20,
-        top: 20,
+        top: 14,
         bottom: MediaQuery.of(context).viewInsets.bottom + 24,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Center(
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 'Criar Nova Meta 🎯',
                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
                   color: AppColors.text,
+                  letterSpacing: -0.3,
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close_rounded, color: AppColors.text),
+                icon: const Icon(Icons.close_rounded, color: AppColors.textSecondary, size: 20),
                 onPressed: () => Navigator.pop(context),
+                visualDensity: VisualDensity.compact,
               ),
             ],
           ),
@@ -111,8 +120,8 @@ class _NewGoalModalState extends State<NewGoalModal> {
             'O que você deseja conquistar?',
             style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: AppColors.border,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
@@ -128,8 +137,8 @@ class _NewGoalModalState extends State<NewGoalModal> {
             'Quantas moedas (R\$) são necessárias?',
             style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: AppColors.border,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
@@ -147,8 +156,7 @@ class _NewGoalModalState extends State<NewGoalModal> {
             backgroundColor: AppColors.primary,
             icon: const Icon(
               Icons.stars_rounded,
-              color: AppColors.text,
-              size: 20,
+              size: 18,
             ),
             padding: const EdgeInsets.symmetric(vertical: 14),
             isExpanded: true,

@@ -18,13 +18,9 @@ class ProfileSelectorSheet extends StatelessWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        side: BorderSide(
-          color: AppColors.border,
-          width: AppTheme.borderWidth,
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppTheme.borderRadiusLarge)),
       ),
       builder: (context) => ProfileSelectorSheet(state: state),
     );
@@ -40,29 +36,32 @@ class ProfileSelectorSheet extends StatelessWidget {
         state.alternarUsuario(user.id);
         Navigator.pop(context);
       },
-      backgroundColor: isSelected ? AppColors.primary : AppColors.surface,
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      backgroundColor: isSelected ? AppColors.surfaceSubtle : AppColors.surface,
+      borderColor: isSelected ? AppColors.primary : AppColors.border,
+      borderWidth: isSelected ? 1.5 : 1.0,
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      borderRadius: 12,
       child: Row(
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
-              color: user.isParent ? AppColors.surface : AppColors.success,
+              color: user.isParent ? AppColors.surfaceSubtle : AppColors.successSubtle,
               shape: BoxShape.circle,
               border: Border.all(
-                color: AppColors.border,
+                color: user.isParent ? AppColors.border : const Color(0xFFA7F3D0),
                 width: AppTheme.borderWidth,
               ),
             ),
             child: Icon(
-              user.isParent ? Icons.shield_rounded : Icons.face_rounded,
-              color: AppColors.text,
-              size: 24,
+              user.isParent ? Icons.shield_outlined : Icons.face_rounded,
+              color: user.isParent ? AppColors.text : AppColors.successText,
+              size: 22,
             ),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,9 +69,10 @@ class ProfileSelectorSheet extends StatelessWidget {
                 Text(
                   user.nome,
                   style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
                     color: AppColors.text,
+                    letterSpacing: -0.2,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -80,10 +80,10 @@ class ProfileSelectorSheet extends StatelessWidget {
                   user.isParent
                       ? 'Controle total, tarefas e mesadas'
                       : 'Saldo: R\$ ${user.saldo.toStringAsFixed(2)}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.text.withValues(alpha: 0.7),
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -91,28 +91,26 @@ class ProfileSelectorSheet extends StatelessWidget {
           ),
           if (isSelected)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: AppColors.primary,
                 borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: AppColors.border,
-                  width: AppTheme.borderWidth,
-                ),
               ),
               child: const Text(
                 'ATIVO',
                 style: TextStyle(
                   fontSize: 10,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.text,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.surface,
+                  letterSpacing: 0.4,
                 ),
               ),
             )
           else
             const Icon(
               Icons.chevron_right_rounded,
-              color: AppColors.border,
+              color: AppColors.textMuted,
+              size: 20,
             ),
         ],
       ),
@@ -127,47 +125,49 @@ class ProfileSelectorSheet extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Center(
               child: Container(
-                width: 44,
-                height: 5,
+                width: 36,
+                height: 4,
                 decoration: BoxDecoration(
                   color: AppColors.border,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
                   'Trocar de Perfil',
                   style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
                     color: AppColors.text,
+                    letterSpacing: -0.3,
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close_rounded, color: AppColors.text),
+                  icon: const Icon(Icons.close_rounded, color: AppColors.textSecondary, size: 20),
                   onPressed: () => Navigator.pop(context),
+                  visualDensity: VisualDensity.compact,
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             const Text(
               'MODO RESPONSÁVEL',
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: AppColors.border,
-                letterSpacing: 0.5,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textMuted,
+                letterSpacing: 0.6,
               ),
             ),
             const SizedBox(height: 8),
@@ -181,10 +181,10 @@ class ProfileSelectorSheet extends StatelessWidget {
             const Text(
               'MODO FILHO',
               style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: AppColors.border,
-                letterSpacing: 0.5,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textMuted,
+                letterSpacing: 0.6,
               ),
             ),
             const SizedBox(height: 8),
@@ -197,7 +197,9 @@ class ProfileSelectorSheet extends StatelessWidget {
             const SizedBox(height: 12),
             FlatButton(
               text: 'Fechar',
-              backgroundColor: AppColors.surface,
+              backgroundColor: AppColors.surfaceSubtle,
+              textColor: AppColors.textSecondary,
+              shadowOffset: Offset.zero,
               onPressed: () => Navigator.pop(context),
             ),
           ],

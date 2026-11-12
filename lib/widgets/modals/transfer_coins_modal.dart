@@ -30,13 +30,9 @@ class TransferCoinsModal extends StatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        side: BorderSide(
-          color: AppColors.border,
-          width: AppTheme.borderWidth,
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppTheme.borderRadiusLarge)),
       ),
       builder: (context) => TransferCoinsModal(
         state: state,
@@ -103,7 +99,7 @@ class _TransferCoinsModalState extends State<TransferCoinsModal> {
       message:
           'Enviado +R\$ ${amount.toStringAsFixed(2)} para $childName com sucesso!',
       type: FlatSnackBarType.success,
-      icon: Icons.monetization_on_rounded,
+      icon: Icons.monetization_on_outlined,
     );
   }
 
@@ -115,27 +111,40 @@ class _TransferCoinsModalState extends State<TransferCoinsModal> {
       padding: EdgeInsets.only(
         left: 20,
         right: 20,
-        top: 20,
+        top: 14,
         bottom: MediaQuery.of(context).viewInsets.bottom + 24,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Center(
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 'Enviar Moedas 💰',
                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
                   color: AppColors.text,
+                  letterSpacing: -0.3,
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close_rounded, color: AppColors.text),
+                icon: const Icon(Icons.close_rounded, color: AppColors.textSecondary, size: 20),
                 onPressed: () => Navigator.pop(context),
+                visualDensity: VisualDensity.compact,
               ),
             ],
           ),
@@ -144,8 +153,8 @@ class _TransferCoinsModalState extends State<TransferCoinsModal> {
             'Enviar para:',
             style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: AppColors.border,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
@@ -155,7 +164,14 @@ class _TransferCoinsModalState extends State<TransferCoinsModal> {
                 .map(
                   (c) => DropdownMenuItem(
                     value: c.id,
-                    child: Text('${c.nome} (Saldo: R\$ ${c.saldo.toStringAsFixed(2)})'),
+                    child: Text(
+                      c.nome,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.text,
+                      ),
+                    ),
                   ),
                 )
                 .toList(),
@@ -170,8 +186,8 @@ class _TransferCoinsModalState extends State<TransferCoinsModal> {
             'Valor (R\$):',
             style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: AppColors.border,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
@@ -187,15 +203,15 @@ class _TransferCoinsModalState extends State<TransferCoinsModal> {
             'Motivo / Descrição:',
             style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: AppColors.border,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
           TextField(
             controller: _reasonController,
             decoration: const InputDecoration(
-              hintText: 'Ex: Recompensa da semana, Tarefa extra...',
+              hintText: 'Ex: Mesada semanal, Comportamento...',
             ),
           ),
           const SizedBox(height: 20),
@@ -204,8 +220,7 @@ class _TransferCoinsModalState extends State<TransferCoinsModal> {
             backgroundColor: AppColors.primary,
             icon: const Icon(
               Icons.send_rounded,
-              color: AppColors.text,
-              size: 20,
+              size: 18,
             ),
             padding: const EdgeInsets.symmetric(vertical: 14),
             isExpanded: true,

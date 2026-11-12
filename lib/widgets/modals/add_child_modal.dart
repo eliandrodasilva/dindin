@@ -20,13 +20,9 @@ class AddChildModal extends StatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        side: BorderSide(
-          color: AppColors.border,
-          width: AppTheme.borderWidth,
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppTheme.borderRadiusLarge)),
       ),
       builder: (context) => AddChildModal(state: state),
     );
@@ -76,27 +72,40 @@ class _AddChildModalState extends State<AddChildModal> {
       padding: EdgeInsets.only(
         left: 20,
         right: 20,
-        top: 20,
+        top: 14,
         bottom: MediaQuery.of(context).viewInsets.bottom + 24,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Center(
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 'Cadastrar Filho 👶',
                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
                   color: AppColors.text,
+                  letterSpacing: -0.3,
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close_rounded, color: AppColors.text),
+                icon: const Icon(Icons.close_rounded, color: AppColors.textSecondary, size: 20),
                 onPressed: () => Navigator.pop(context),
+                visualDensity: VisualDensity.compact,
               ),
             ],
           ),
@@ -105,8 +114,8 @@ class _AddChildModalState extends State<AddChildModal> {
             'Nome do dependente:',
             style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: AppColors.border,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
@@ -122,8 +131,8 @@ class _AddChildModalState extends State<AddChildModal> {
             'Saldo inicial de moedas (R\$):',
             style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: AppColors.border,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
@@ -140,8 +149,7 @@ class _AddChildModalState extends State<AddChildModal> {
             backgroundColor: AppColors.primary,
             icon: const Icon(
               Icons.person_add_alt_1_rounded,
-              color: AppColors.text,
-              size: 20,
+              size: 18,
             ),
             padding: const EdgeInsets.symmetric(vertical: 14),
             isExpanded: true,
