@@ -20,7 +20,7 @@ class ChildDashboardScreen extends StatelessWidget {
   IconData _getGoalIcon(String title) {
     final lower = title.toLowerCase();
     if (lower.contains('jogo') || lower.contains('videogame')) {
-      return Icons.sports_esports_rounded;
+      return Icons.sports_esports_outlined;
     }
     if (lower.contains('passeio') || lower.contains('viagem')) {
       return Icons.flight_takeoff_rounded;
@@ -31,7 +31,7 @@ class ChildDashboardScreen extends StatelessWidget {
     if (lower.contains('livro')) {
       return Icons.menu_book_rounded;
     }
-    return Icons.savings_rounded;
+    return Icons.savings_outlined;
   }
 
   String _formatDate(DateTime date) {
@@ -52,13 +52,25 @@ class ChildDashboardScreen extends StatelessWidget {
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+      padding: const EdgeInsets.fromLTRB(16, 6, 16, 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          FlatCard(
-            backgroundColor: AppColors.primary,
-            padding: const EdgeInsets.all(20),
+          // Hero Card - Modern Fintech Midnight Slate
+          Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(AppTheme.borderRadiusLarge),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF0F172A).withValues(alpha: 0.12),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                  spreadRadius: 0,
+                ),
+              ],
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,100 +88,82 @@ class ChildDashboardScreen extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.surface,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: AppColors.border,
-                                width: AppTheme.borderWidth,
-                              ),
+                              color: Colors.white.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(AppTheme.borderRadiusPill),
                             ),
                             child: Text(
                               'OLÁ, ${currentChild.nome.toUpperCase()}! ⭐',
                               style: const TextStyle(
                                 fontSize: 11,
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.text,
-                                letterSpacing: 0.5,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                letterSpacing: 0.4,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          const Text(
+                          const SizedBox(height: 12),
+                          Text(
                             'Meu Cofrinho',
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.text,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white.withValues(alpha: 0.75),
+                              letterSpacing: -0.2,
                             ),
                           ),
                         ],
                       ),
                     ),
                     Container(
-                      width: 52,
-                      height: 52,
+                      width: 46,
+                      height: 46,
                       decoration: BoxDecoration(
-                        color: AppColors.surface,
+                        color: Colors.white.withValues(alpha: 0.12),
                         shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColors.border,
-                          width: AppTheme.borderWidth,
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: AppColors.border,
-                            offset: AppTheme.shadowOffsetSmall,
-                            blurRadius: 0,
-                          ),
-                        ],
                       ),
                       child: const Icon(
-                        Icons.savings_rounded,
-                        color: AppColors.text,
-                        size: 30,
+                        Icons.savings_outlined,
+                        color: Colors.white,
+                        size: 24,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 Text(
                   'R\$ ${currentChild.saldo.toStringAsFixed(2)}',
                   style: const TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.text,
+                    fontSize: 38,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
                     letterSpacing: -1,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 14),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
-                    vertical: 8,
+                    vertical: 9,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.surface.withValues(alpha: 0.7),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: AppColors.border,
-                      width: AppTheme.borderWidth,
-                    ),
+                    color: Colors.white.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.auto_awesome_rounded,
-                        size: 16,
-                        color: AppColors.text,
+                        size: 15,
+                        color: Color(0xFFFBBF24),
                       ),
-                      SizedBox(width: 6),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Cumpra tarefas para ganhar mais moedas!',
                           style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.text,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white.withValues(alpha: 0.9),
                           ),
                         ),
                       ),
@@ -180,19 +174,26 @@ class ChildDashboardScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
+
+          // Section: Minhas Metas
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'MINHAS METAS',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.border,
-                  letterSpacing: 0.5,
+              const Flexible(
+                child: Text(
+                  'MINHAS METAS',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textSecondary,
+                    letterSpacing: 0.6,
+                  ),
                 ),
               ),
+              const SizedBox(width: 8),
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -200,8 +201,8 @@ class ChildDashboardScreen extends StatelessWidget {
                       vertical: 3,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(8),
+                      color: AppColors.surfaceSubtle,
+                      borderRadius: BorderRadius.circular(AppTheme.borderRadiusPill),
                       border: Border.all(
                         color: AppColors.border,
                         width: AppTheme.borderWidth,
@@ -211,8 +212,8 @@ class ChildDashboardScreen extends StatelessWidget {
                       '${childGoals.length} ativas',
                       style: const TextStyle(
                         fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.text,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textSecondary,
                       ),
                     ),
                   ),
@@ -231,33 +232,22 @@ class ChildDashboardScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.primary,
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: AppColors.border,
-                          width: AppTheme.borderWidth,
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: AppColors.border,
-                            offset: AppTheme.shadowOffsetSmall,
-                            blurRadius: 0,
-                          ),
-                        ],
                       ),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             Icons.add_rounded,
-                            size: 16,
-                            color: AppColors.text,
+                            size: 15,
+                            color: AppColors.surface,
                           ),
                           SizedBox(width: 4),
                           Text(
                             'Nova Meta',
                             style: TextStyle(
                               fontSize: 11,
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.text,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.surface,
                             ),
                           ),
                         ],
@@ -275,10 +265,10 @@ class ChildDashboardScreen extends StatelessWidget {
               child: Center(
                 child: Text(
                   'Nenhuma meta cadastrada ainda.',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.text.withValues(alpha: 0.6),
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.textMuted,
                   ),
                 ),
               ),
@@ -291,15 +281,16 @@ class ChildDashboardScreen extends StatelessWidget {
                 physics: const BouncingScrollPhysics(),
                 itemCount: childGoals.length,
                 separatorBuilder: (context, index) =>
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 12),
                 itemBuilder: (context, index) {
                   final goal = childGoals[index];
                   final percent = (goal.progresso * 100).toInt();
 
                   return SizedBox(
-                    width: 230,
+                    width: 236,
                     child: FlatCard(
-                      padding: const EdgeInsets.all(14),
+                      padding: const EdgeInsets.all(16),
+                      borderRadius: AppTheme.borderRadius,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -310,8 +301,8 @@ class ChildDashboardScreen extends StatelessWidget {
                                 width: 36,
                                 height: 36,
                                 decoration: BoxDecoration(
-                                  color: AppColors.primary,
-                                  borderRadius: BorderRadius.circular(8),
+                                  color: AppColors.surfaceSubtle,
+                                  borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
                                     color: AppColors.border,
                                     width: AppTheme.borderWidth,
@@ -319,8 +310,8 @@ class ChildDashboardScreen extends StatelessWidget {
                                 ),
                                 child: Icon(
                                   _getGoalIcon(goal.titulo),
-                                  color: AppColors.text,
-                                  size: 20,
+                                  color: AppColors.primary,
+                                  size: 18,
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -330,9 +321,10 @@ class ChildDashboardScreen extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w800,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
                                     color: AppColors.text,
+                                    letterSpacing: -0.2,
                                   ),
                                 ),
                               ),
@@ -349,40 +341,34 @@ class ChildDashboardScreen extends StatelessWidget {
                                     'R\$ ${goal.valorAtual.toStringAsFixed(0)}',
                                     style: const TextStyle(
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w700,
                                       color: AppColors.text,
                                     ),
                                   ),
                                   Text(
                                     'de R\$ ${goal.valorAlvo.toStringAsFixed(0)}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color:
-                                          AppColors.text.withValues(alpha: 0.6),
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.textMuted,
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 6),
+                              const SizedBox(height: 8),
                               Container(
-                                height: 16,
+                                height: 7,
                                 decoration: BoxDecoration(
-                                  color: AppColors.background,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: AppColors.border,
-                                    width: AppTheme.borderWidth,
-                                  ),
+                                  color: AppColors.surfaceSubtle,
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: FractionallySizedBox(
                                   alignment: Alignment.centerLeft,
-                                  widthFactor: goal.progresso,
+                                  widthFactor: goal.progresso.clamp(0.0, 1.0),
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: AppColors.success,
-                                      borderRadius:
-                                          BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.circular(4),
                                     ),
                                   ),
                                 ),
@@ -396,21 +382,21 @@ class ChildDashboardScreen extends StatelessWidget {
                                 '$percent% concluído',
                                 style: const TextStyle(
                                   fontSize: 12,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.text,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.textSecondary,
                                 ),
                               ),
                               if (goal.isCompleted)
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
+                                    horizontal: 7,
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.success,
+                                    color: AppColors.successSubtle,
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
-                                      color: AppColors.border,
+                                      color: const Color(0xFFA7F3D0),
                                       width: AppTheme.borderWidth,
                                     ),
                                   ),
@@ -418,8 +404,9 @@ class ChildDashboardScreen extends StatelessWidget {
                                     'CONQUISTADA!',
                                     style: TextStyle(
                                       fontSize: 9,
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.text,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.successText,
+                                      letterSpacing: 0.3,
                                     ),
                                   ),
                                 ),
@@ -433,16 +420,18 @@ class ChildDashboardScreen extends StatelessWidget {
               ),
             ),
           const SizedBox(height: 24),
+
+          // Section: Tarefas do Dia
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 'TAREFAS DO DIA',
                 style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.border,
-                  letterSpacing: 0.5,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textSecondary,
+                  letterSpacing: 0.6,
                 ),
               ),
               Container(
@@ -451,8 +440,8 @@ class ChildDashboardScreen extends StatelessWidget {
                   vertical: 3,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.surfaceSubtle,
+                  borderRadius: BorderRadius.circular(AppTheme.borderRadiusPill),
                   border: Border.all(
                     color: AppColors.border,
                     width: AppTheme.borderWidth,
@@ -462,8 +451,8 @@ class ChildDashboardScreen extends StatelessWidget {
                   '$pendingOrWaitingTasks para fazer',
                   style: const TextStyle(
                     fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.text,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ),
@@ -476,10 +465,10 @@ class ChildDashboardScreen extends StatelessWidget {
               child: Center(
                 child: Text(
                   'Nenhuma tarefa para hoje! Bom descanso!',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.text.withValues(alpha: 0.6),
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.textMuted,
                   ),
                 ),
               ),
@@ -489,6 +478,7 @@ class ChildDashboardScreen extends StatelessWidget {
               FlatCard(
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(16),
+                borderRadius: AppTheme.borderRadius,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -500,13 +490,17 @@ class ChildDashboardScreen extends StatelessWidget {
                           height: 38,
                           decoration: BoxDecoration(
                             color: task.isCompleted
-                                ? AppColors.success
+                                ? AppColors.successSubtle
                                 : (task.isWaitingApproval
-                                    ? const Color(0xFFFFF3CD)
-                                    : AppColors.surface),
+                                    ? AppColors.warningSubtle
+                                    : AppColors.surfaceSubtle),
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: AppColors.border,
+                              color: task.isCompleted
+                                  ? const Color(0xFFA7F3D0)
+                                  : (task.isWaitingApproval
+                                      ? const Color(0xFFFDE68A)
+                                      : AppColors.border),
                               width: AppTheme.borderWidth,
                             ),
                           ),
@@ -514,9 +508,13 @@ class ChildDashboardScreen extends StatelessWidget {
                             task.isCompleted
                                 ? Icons.check_circle_rounded
                                 : (task.isWaitingApproval
-                                    ? Icons.hourglass_top_rounded
+                                    ? Icons.schedule_rounded
                                     : Icons.assignment_outlined),
-                            color: AppColors.text,
+                            color: task.isCompleted
+                                ? AppColors.success
+                                : (task.isWaitingApproval
+                                    ? AppColors.warning
+                                    : AppColors.textSecondary),
                             size: 20,
                           ),
                         ),
@@ -529,32 +527,32 @@ class ChildDashboardScreen extends StatelessWidget {
                                 task.titulo,
                                 style: TextStyle(
                                   fontSize: 15,
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w600,
                                   color: AppColors.text,
+                                  letterSpacing: -0.2,
                                   decoration: task.isCompleted
                                       ? TextDecoration.lineThrough
                                       : null,
                                 ),
                               ),
-                              const SizedBox(height: 6),
+                              const SizedBox(height: 5),
                               Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   CurrencyBadge.income(
                                     amount: task.recompensa,
                                     fontSize: 12,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 3,
-                                    ),
                                   ),
                                   const SizedBox(width: 8),
-                                  Text(
-                                    'de recompensa',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.text
-                                          .withValues(alpha: 0.6),
+                                  const Flexible(
+                                    child: Text(
+                                      'de recompensa',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.textMuted,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -569,13 +567,12 @@ class ChildDashboardScreen extends StatelessWidget {
                       FlatButton(
                         text: 'Feito!',
                         icon: const Icon(
-                          Icons.check_circle_rounded,
-                          color: AppColors.text,
-                          size: 20,
+                          Icons.check_rounded,
+                          size: 18,
                         ),
                         backgroundColor: AppColors.success,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        fontSize: 16,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        fontSize: 15,
                         isExpanded: true,
                         onPressed: () {
                           appState.concluirTarefaPelaCrianca(task.id);
@@ -593,13 +590,13 @@ class ChildDashboardScreen extends StatelessWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
-                          vertical: 12,
+                          vertical: 11,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFF3CD),
+                          color: AppColors.warningSubtle,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: AppColors.border,
+                            color: const Color(0xFFFDE68A),
                             width: AppTheme.borderWidth,
                           ),
                         ),
@@ -608,16 +605,16 @@ class ChildDashboardScreen extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.schedule_rounded,
-                              size: 18,
-                              color: AppColors.text,
+                              size: 16,
+                              color: AppColors.warningText,
                             ),
                             SizedBox(width: 8),
                             Text(
                               'Aguardando aprovação dos pais',
                               style: TextStyle(
                                 fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.text,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.warningText,
                               ),
                             ),
                           ],
@@ -628,13 +625,13 @@ class ChildDashboardScreen extends StatelessWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
-                          vertical: 12,
+                          vertical: 11,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.success.withValues(alpha: 0.5),
+                          color: AppColors.successSubtle,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: AppColors.border,
+                            color: const Color(0xFFA7F3D0),
                             width: AppTheme.borderWidth,
                           ),
                         ),
@@ -643,16 +640,16 @@ class ChildDashboardScreen extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.verified_rounded,
-                              size: 18,
-                              color: AppColors.text,
+                              size: 16,
+                              color: AppColors.successText,
                             ),
                             SizedBox(width: 8),
                             Text(
                               'Tarefa Concluída e Paga!',
                               style: TextStyle(
                                 fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.text,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.successText,
                               ),
                             ),
                           ],
@@ -662,13 +659,15 @@ class ChildDashboardScreen extends StatelessWidget {
                 ),
               ),
           const SizedBox(height: 24),
+
+          // Section: Últimas Transações
           const Text(
             'ÚLTIMAS TRANSAÇÕES',
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w900,
-              color: AppColors.border,
-              letterSpacing: 0.5,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textSecondary,
+              letterSpacing: 0.6,
             ),
           ),
           const SizedBox(height: 12),
@@ -678,10 +677,10 @@ class ChildDashboardScreen extends StatelessWidget {
               child: Center(
                 child: Text(
                   'Nenhuma transação registrada ainda.',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.text.withValues(alpha: 0.6),
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.textMuted,
                   ),
                 ),
               ),
@@ -689,11 +688,12 @@ class ChildDashboardScreen extends StatelessWidget {
           else
             for (final tx in childTransactions.take(3))
               FlatCard(
-                margin: const EdgeInsets.only(bottom: 10),
+                margin: const EdgeInsets.only(bottom: 8),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                  horizontal: 14,
+                  vertical: 11,
                 ),
+                borderRadius: 12,
                 child: Row(
                   children: [
                     Container(
@@ -701,11 +701,13 @@ class ChildDashboardScreen extends StatelessWidget {
                       height: 36,
                       decoration: BoxDecoration(
                         color: tx.isCredito
-                            ? AppColors.success
-                            : AppColors.alert,
+                            ? AppColors.successSubtle
+                            : AppColors.alertSubtle,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: AppColors.border,
+                          color: tx.isCredito
+                              ? const Color(0xFFA7F3D0)
+                              : const Color(0xFFFECACA),
                           width: AppTheme.borderWidth,
                         ),
                       ),
@@ -713,7 +715,9 @@ class ChildDashboardScreen extends StatelessWidget {
                         tx.isCredito
                             ? Icons.arrow_downward_rounded
                             : Icons.arrow_upward_rounded,
-                        color: AppColors.text,
+                        color: tx.isCredito
+                            ? AppColors.successText
+                            : AppColors.alertText,
                         size: 18,
                       ),
                     ),
@@ -726,18 +730,18 @@ class ChildDashboardScreen extends StatelessWidget {
                             tx.titulo,
                             style: const TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: FontWeight.w600,
                               color: AppColors.text,
+                              letterSpacing: -0.2,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             _formatDate(tx.data),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color:
-                                  AppColors.text.withValues(alpha: 0.6),
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.textMuted,
                             ),
                           ),
                         ],
@@ -749,10 +753,6 @@ class ChildDashboardScreen extends StatelessWidget {
                           ? CurrencyBadgeType.income
                           : CurrencyBadgeType.expense,
                       fontSize: 13,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
                     ),
                   ],
                 ),

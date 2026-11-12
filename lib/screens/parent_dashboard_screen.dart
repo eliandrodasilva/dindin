@@ -48,33 +48,30 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
       backgroundColor: Colors.transparent,
       floatingActionButton: Container(
         decoration: BoxDecoration(
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: AppColors.border,
-              offset: AppTheme.shadowOffset,
-              blurRadius: 0,
+              color: const Color(0xFF0F172A).withValues(alpha: 0.16),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
             ),
           ],
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppTheme.borderRadius),
         ),
         child: FloatingActionButton.extended(
           elevation: 0,
           highlightElevation: 0,
           backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.text,
+          foregroundColor: AppColors.surface,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: const BorderSide(
-              color: AppColors.border,
-              width: AppTheme.borderWidth,
-            ),
+            borderRadius: BorderRadius.circular(AppTheme.borderRadius),
           ),
-          icon: const Icon(Icons.add_task_rounded, size: 22),
+          icon: const Icon(Icons.add_task_rounded, size: 20),
           label: const Text(
             'Nova Tarefa',
             style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w800,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              letterSpacing: -0.2,
             ),
           ),
           onPressed: () => CreateTaskModal.show(
@@ -86,59 +83,49 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
+        padding: const EdgeInsets.fromLTRB(16, 6, 16, 96),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Header: Gerenciando Filho
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
                   'GERENCIANDO FILHO',
                   style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.border,
-                    letterSpacing: 0.5,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textSecondary,
+                    letterSpacing: 0.6,
                   ),
                 ),
                 GestureDetector(
                   onTap: () => AddChildModal.show(context, state: appState),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                      horizontal: 10,
+                      vertical: 5,
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.primary,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: AppColors.border,
-                        width: AppTheme.borderWidth,
-                      ),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: AppColors.border,
-                          offset: AppTheme.shadowOffsetSmall,
-                          blurRadius: 0,
-                        ),
-                      ],
                     ),
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           Icons.person_add_alt_1_rounded,
-                          size: 14,
-                          color: AppColors.text,
+                          size: 13,
+                          color: AppColors.surface,
                         ),
                         SizedBox(width: 4),
                         Text(
                           '+ Filho',
                           style: TextStyle(
                             fontSize: 11,
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.text,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.surface,
                           ),
                         ),
                       ],
@@ -147,7 +134,9 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
+
+            // Horizontal Children Chips
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -162,10 +151,10 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                         });
                       },
                       child: Container(
-                        margin: const EdgeInsets.only(right: 10),
+                        margin: const EdgeInsets.only(right: 8),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 10,
+                          horizontal: 12,
+                          vertical: 8,
                         ),
                         decoration: BoxDecoration(
                           color: isSelected
@@ -173,41 +162,58 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                               : AppColors.surface,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: AppColors.border,
+                            color: isSelected
+                                ? AppColors.primary
+                                : AppColors.border,
                             width: AppTheme.borderWidth,
                           ),
                           boxShadow: isSelected
-                              ? const [
+                              ? [
                                   BoxShadow(
-                                    color: AppColors.border,
-                                    offset: AppTheme.shadowOffsetSmall,
-                                    blurRadius: 0,
+                                    color: const Color(0xFF0F172A).withValues(alpha: 0.12),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
                                   ),
                                 ]
                               : null,
                         ),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.face_rounded,
-                              size: 20,
-                              color: AppColors.text,
+                              size: 18,
+                              color: isSelected
+                                  ? AppColors.surface
+                                  : AppColors.textSecondary,
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 7),
                             Text(
                               child.nome,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 fontWeight: isSelected
-                                    ? FontWeight.w900
-                                    : FontWeight.w700,
-                                color: AppColors.text,
+                                    ? FontWeight.w700
+                                    : FontWeight.w600,
+                                color: isSelected
+                                    ? AppColors.surface
+                                    : AppColors.text,
+                                letterSpacing: -0.2,
                               ),
                             ),
                             const SizedBox(width: 8),
                             CurrencyBadge.neutral(
                               amount: child.saldo,
                               fontSize: 11,
+                              backgroundColor: isSelected
+                                  ? Colors.white.withValues(alpha: 0.16)
+                                  : AppColors.surfaceSubtle,
+                              textColor: isSelected
+                                  ? AppColors.surface
+                                  : AppColors.text,
+                              borderColor: isSelected
+                                  ? Colors.transparent
+                                  : AppColors.border,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 6,
                                 vertical: 2,
@@ -222,40 +228,51 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
               ),
             ),
             const SizedBox(height: 16),
+
+            // Quick Actions Card
             if (currentChild != null)
               FlatCard(
                 backgroundColor: AppColors.surface,
                 padding: const EdgeInsets.all(16),
+                borderRadius: AppTheme.borderRadius,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Ações Rápidas para ${currentChild.nome}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.text,
+                        Flexible(
+                          child: Text(
+                            'Ações Rápidas para ${currentChild.nome}',
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.text,
+                              letterSpacing: -0.2,
+                            ),
                           ),
                         ),
+                        const SizedBox(width: 8),
                         CurrencyBadge.neutral(
                           amount: currentChild.saldo,
                           fontSize: 12,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 14),
                     Row(
                       children: [
                         Expanded(
                           child: FlatButton(
                             text: '+5',
-                            backgroundColor: const Color(0xFFE8F5E9),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            backgroundColor: AppColors.successSubtle,
+                            textColor: AppColors.successText,
+                            borderColor: const Color(0xFFA7F3D0),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             borderRadius: 10,
-                            fontSize: 15,
+                            fontSize: 14,
+                            shadowOffset: Offset.zero,
                             onPressed: () => TransferCoinsModal.show(
                               context,
                               state: appState,
@@ -265,14 +282,17 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: FlatButton(
                             text: '+10',
-                            backgroundColor: AppColors.primary,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            backgroundColor: AppColors.infoSubtle,
+                            textColor: AppColors.infoText,
+                            borderColor: const Color(0xFFBAE6FD),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             borderRadius: 10,
-                            fontSize: 15,
+                            fontSize: 14,
+                            shadowOffset: Offset.zero,
                             onPressed: () => TransferCoinsModal.show(
                               context,
                               state: appState,
@@ -282,14 +302,17 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: FlatButton(
                             text: '+20',
-                            backgroundColor: AppColors.success,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            backgroundColor: AppColors.warningSubtle,
+                            textColor: AppColors.warningText,
+                            borderColor: const Color(0xFFFDE68A),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             borderRadius: 10,
-                            fontSize: 15,
+                            fontSize: 14,
+                            shadowOffset: Offset.zero,
                             onPressed: () => TransferCoinsModal.show(
                               context,
                               state: appState,
@@ -306,14 +329,16 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                       text: 'Enviar Outro Valor',
                       icon: const Icon(
                         Icons.payments_outlined,
-                        size: 18,
-                        color: AppColors.text,
+                        size: 16,
                       ),
-                      backgroundColor: AppColors.surface,
+                      backgroundColor: AppColors.surfaceSubtle,
+                      textColor: AppColors.text,
+                      borderColor: AppColors.border,
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       borderRadius: 10,
                       isExpanded: true,
-                      fontSize: 14,
+                      fontSize: 13,
+                      shadowOffset: Offset.zero,
                       onPressed: () => TransferCoinsModal.show(
                         context,
                         state: appState,
@@ -324,16 +349,18 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                 ),
               ),
             const SizedBox(height: 20),
+
+            // Section: Aprovações Pendentes
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
                   'APROVAÇÕES PENDENTES',
                   style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.border,
-                    letterSpacing: 0.5,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textSecondary,
+                    letterSpacing: 0.6,
                   ),
                 ),
                 Container(
@@ -341,11 +368,13 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: waitingApprovalTasks.isEmpty
-                        ? AppColors.surface
-                        : AppColors.alert,
+                        ? AppColors.surfaceSubtle
+                        : AppColors.alertSubtle,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: AppColors.border,
+                      color: waitingApprovalTasks.isEmpty
+                          ? AppColors.border
+                          : const Color(0xFFFECACA),
                       width: AppTheme.borderWidth,
                     ),
                   ),
@@ -353,10 +382,10 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                     '${waitingApprovalTasks.length}',
                     style: TextStyle(
                       fontSize: 11,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                       color: waitingApprovalTasks.isEmpty
-                          ? AppColors.text
-                          : AppColors.surface,
+                          ? AppColors.textSecondary
+                          : AppColors.alertText,
                     ),
                   ),
                 ),
@@ -367,21 +396,30 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
               FlatCard(
                 backgroundColor: AppColors.surface,
                 padding: const EdgeInsets.all(24),
+                borderRadius: AppTheme.borderRadius,
                 child: Center(
                   child: Column(
                     children: [
-                      const Icon(
-                        Icons.done_all_rounded,
-                        size: 32,
-                        color: AppColors.success,
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: const BoxDecoration(
+                          color: AppColors.successSubtle,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.done_all_rounded,
+                          size: 20,
+                          color: AppColors.success,
+                        ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
+                      const SizedBox(height: 10),
+                      const Text(
                         'Nenhuma tarefa pendente de aprovação!',
                         style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.text.withValues(alpha: 0.7),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -392,8 +430,9 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
               for (final task in waitingApprovalTasks)
                 FlatCard(
                   margin: const EdgeInsets.only(bottom: 12),
-                  backgroundColor: const Color(0xFFFFFBEA),
+                  backgroundColor: AppColors.surface,
                   padding: const EdgeInsets.all(16),
+                  borderRadius: AppTheme.borderRadius,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -403,17 +442,13 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                           Container(
                             width: 36,
                             height: 36,
-                            decoration: BoxDecoration(
-                              color: AppColors.surface,
+                            decoration: const BoxDecoration(
+                              color: AppColors.warningSubtle,
                               shape: BoxShape.circle,
-                              border: Border.all(
-                                color: AppColors.border,
-                                width: AppTheme.borderWidth,
-                              ),
                             ),
                             child: const Icon(
                               Icons.hourglass_top_rounded,
-                              color: AppColors.text,
+                              color: AppColors.warningText,
                               size: 18,
                             ),
                           ),
@@ -426,20 +461,21 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                                   task.titulo,
                                   style: const TextStyle(
                                     fontSize: 15,
-                                    fontWeight: FontWeight.w800,
+                                    fontWeight: FontWeight.w600,
                                     color: AppColors.text,
+                                    letterSpacing: -0.2,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                Row(
+                                Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
                                   children: [
-                                    Text(
+                                    const Text(
                                       'Feito por: ',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.text
-                                            .withValues(alpha: 0.6),
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.textMuted,
                                       ),
                                     ),
                                     Container(
@@ -448,7 +484,7 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                                         vertical: 1,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: AppColors.surface,
+                                        color: AppColors.surfaceSubtle,
                                         borderRadius: BorderRadius.circular(4),
                                         border: Border.all(
                                           color: AppColors.border,
@@ -460,9 +496,10 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                                             .firstWhere(
                                                 (u) => u.id == task.atribuidaA)
                                             .nome,
+                                        overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                           fontSize: 11,
-                                          fontWeight: FontWeight.w800,
+                                          fontWeight: FontWeight.w600,
                                           color: AppColors.text,
                                         ),
                                       ),
@@ -485,13 +522,12 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                                   'Aprovar (+${task.recompensa.toInt()} moedas)',
                               backgroundColor: AppColors.success,
                               icon: const Icon(
-                                Icons.check_circle_rounded,
-                                color: AppColors.text,
-                                size: 18,
+                                Icons.check_rounded,
+                                size: 16,
                               ),
-                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                               borderRadius: 8,
-                              fontSize: 13,
+                              fontSize: 12,
                               onPressed: () {
                                 appState.aprovarTarefaPeloPai(task.id);
                                 FlatSnackBar.show(
@@ -509,11 +545,13 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
                             flex: 2,
                             child: FlatButton(
                               text: 'Recusar',
-                              backgroundColor: AppColors.surface,
-                              textColor: AppColors.alert,
+                              backgroundColor: AppColors.surfaceSubtle,
+                              textColor: AppColors.alertText,
+                              borderColor: const Color(0xFFFECACA),
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               borderRadius: 8,
                               fontSize: 13,
+                              shadowOffset: Offset.zero,
                               onPressed: () {
                                 appState.recusarTarefaPeloPai(task.id);
                                 FlatSnackBar.show(
