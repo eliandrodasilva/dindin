@@ -1,8 +1,47 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
 
+class TaskSummary {
+  const TaskSummary({
+    required this.completedCount,
+    required this.openCount,
+    required this.dailyTotal,
+    required this.dailyCompleted,
+  });
+
+  final int completedCount;
+  final int openCount;
+  final int dailyTotal;
+  final int dailyCompleted;
+
+  int get totalRelevant => completedCount + openCount;
+
+  /// Completion average between completed and open tasks (0.0 to 1.0).
+  double get completionAverage =>
+      totalRelevant == 0 ? 0.0 : completedCount / totalRelevant;
+
+  /// Daily tasks progression (0.0 to 1.0).
+  double get dailyProgress =>
+      dailyTotal == 0 ? 0.0 : dailyCompleted / dailyTotal;
+}
+
+class MonthlyAllowanceEntry {
+  const MonthlyAllowanceEntry({
+    required this.monthKey,
+    required this.monthLabel,
+    required this.total,
+  });
+
+  final String monthKey;
+  final String monthLabel;
+  final double total;
+}
+
 class AppState extends ChangeNotifier {
-  AppState() {
+  AppState({bool initialLoggedIn = false}) : _isLoggedIn = initialLoggedIn {
+    final now = DateTime.now();
+    final previousMonth = DateTime(now.year, now.month - 1, 15);
+
     _users = [
       const User(
         id: 'parent-1',
@@ -13,17 +52,19 @@ class AppState extends ChangeNotifier {
       ),
       const User(
         id: 'child-1',
-        nome: 'Lucas',
+        nome: 'Helena',
         role: UserRole.child,
-        avatarSeed: 'lucas',
-        saldo: 45.0,
+        avatarSeed: 'helena',
+        saldo: 65.0,
+        idade: 11,
       ),
       const User(
         id: 'child-2',
         nome: 'Sofia',
         role: UserRole.child,
         avatarSeed: 'sofia',
-        saldo: 30.0,
+        saldo: 40.0,
+        idade: 9,
       ),
     ];
 
@@ -32,47 +73,67 @@ class AppState extends ChangeNotifier {
     _tasks = [
       const Task(
         id: 'task-1',
-        titulo: 'Arrumar a cama e quarto',
+        titulo: 'Lavar e secar a louça do almoço',
         recompensa: 5.0,
         status: TaskStatus.completed,
         atribuidaA: 'child-1',
+        frequencia: TaskFrequency.diaria,
       ),
       const Task(
         id: 'task-2',
-        titulo: 'Fazer o dever de casa de matemática',
+        titulo: 'Organizar a estante de livros e cadernos',
         recompensa: 10.0,
         status: TaskStatus.waitingApproval,
         atribuidaA: 'child-1',
+        frequencia: TaskFrequency.unica,
       ),
       const Task(
         id: 'task-3',
-        titulo: 'Guardar os brinquedos',
-        recompensa: 5.0,
+        titulo: 'Passear e alimentar o cachorro',
+        recompensa: 4.0,
         status: TaskStatus.pending,
-        atribuidaA: 'child-2',
+        atribuidaA: 'child-1',
+        frequencia: TaskFrequency.diaria,
       ),
       const Task(
         id: 'task-4',
-        titulo: 'Regar as plantas do quintal',
+        titulo: 'Recolher e dobrar as roupas do varal',
+        recompensa: 5.0,
+        status: TaskStatus.completed,
+        atribuidaA: 'child-2',
+        frequencia: TaskFrequency.diaria,
+      ),
+      const Task(
+        id: 'task-5',
+        titulo: 'Limpar e organizar a mesa de estudos',
         recompensa: 8.0,
         status: TaskStatus.pending,
         atribuidaA: 'child-2',
+        frequencia: TaskFrequency.semanal,
+      ),
+      const Task(
+        id: 'task-6',
+        titulo: 'Ler 20 páginas de um livro e fazer resumo',
+        recompensa: 6.0,
+        status: TaskStatus.pending,
+        atribuidaA: 'child-2',
+        frequencia: TaskFrequency.diaria,
       ),
     ];
 
     _goals = [
       const Goal(
         id: 'goal-1',
-        titulo: 'Jogo de Videogame',
+        titulo: 'Fone de Ouvido Bluetooth',
         valorAlvo: 150.0,
-        valorAtual: 45.0,
+        valorAtual: 65.0,
         childId: 'child-1',
       ),
       const Goal(
         id: 'goal-2',
         titulo: 'Patins Coloridos',
         valorAlvo: 120.0,
-        valorAtual: 30.0,
+        valorAtual: 40.0,
         childId: 'child-2',
       ),
     ];
@@ -80,37 +141,69 @@ class AppState extends ChangeNotifier {
     _transactions = [
       Transaction(
         id: 'tx-1',
-        titulo: 'Mesada semanal',
-        valor: 20.0,
-        data: DateTime.now().subtract(const Duration(days: 3)),
+        titulo: 'Mesada do mês',
+        valor: 40.0,
+        data: now.subtract(const Duration(days: 2)),
         tipo: TransactionType.credito,
         childId: 'child-1',
+        origem: TransactionSource.mesada,
       ),
       Transaction(
         id: 'tx-2',
-        titulo: 'Tarefa: Arrumar o quarto',
+        titulo: 'Recompensa: Lavar e secar a louça do almoço',
         valor: 5.0,
-        data: DateTime.now().subtract(const Duration(days: 1)),
+        data: now.subtract(const Duration(days: 1)),
         tipo: TransactionType.credito,
         childId: 'child-1',
+        origem: TransactionSource.tarefa,
       ),
       Transaction(
         id: 'tx-3',
-        titulo: 'Mesada semanal',
-        valor: 20.0,
-        data: DateTime.now().subtract(const Duration(days: 3)),
+        titulo: 'Mesada do mês anterior',
+        valor: 40.0,
+        data: previousMonth,
+        tipo: TransactionType.credito,
+        childId: 'child-1',
+        origem: TransactionSource.mesada,
+      ),
+      Transaction(
+        id: 'tx-4',
+        titulo: 'Mesada do mês',
+        valor: 35.0,
+        data: now.subtract(const Duration(days: 3)),
         tipo: TransactionType.credito,
         childId: 'child-2',
+        origem: TransactionSource.mesada,
+      ),
+      Transaction(
+        id: 'tx-5',
+        titulo: 'Recompensa: Recolher e dobrar as roupas do varal',
+        valor: 5.0,
+        data: now.subtract(const Duration(days: 1)),
+        tipo: TransactionType.credito,
+        childId: 'child-2',
+        origem: TransactionSource.tarefa,
+      ),
+      Transaction(
+        id: 'tx-6',
+        titulo: 'Mesada do mês anterior',
+        valor: 30.0,
+        data: previousMonth,
+        tipo: TransactionType.credito,
+        childId: 'child-2',
+        origem: TransactionSource.mesada,
       ),
     ];
   }
 
+  bool _isLoggedIn;
   late List<User> _users;
   late User _currentUser;
   late List<Task> _tasks;
   late List<Goal> _goals;
   late List<Transaction> _transactions;
 
+  bool get isLoggedIn => _isLoggedIn;
   List<User> get users => List.unmodifiable(_users);
   User get currentUser => _currentUser;
   List<Task> get tasks => List.unmodifiable(_tasks);
@@ -118,8 +211,7 @@ class AppState extends ChangeNotifier {
   List<Transaction> get transactions => List.unmodifiable(_transactions);
 
   List<User> get children => _users.where((user) => user.isChild).toList();
-  User? get parent =>
-      _users.where((user) => user.isParent).firstOrNull;
+  User? get parent => _users.where((user) => user.isParent).firstOrNull;
 
   List<Task> tasksForChild(String childId) =>
       _tasks.where((task) => task.atribuidaA == childId).toList();
@@ -130,11 +222,97 @@ class AppState extends ChangeNotifier {
   List<Transaction> transactionsForChild(String childId) =>
       _transactions.where((tx) => tx.childId == childId).toList();
 
+  TaskSummary summaryForTasks(Iterable<Task> taskList) {
+    int completed = 0;
+    int open = 0;
+    int dailyTotal = 0;
+    int dailyCompleted = 0;
+
+    for (final task in taskList) {
+      if (task.isCancelled) continue;
+      if (task.isCompleted) {
+        completed++;
+      } else {
+        open++;
+      }
+      if (task.isDaily) {
+        dailyTotal++;
+        if (task.isCompleted) {
+          dailyCompleted++;
+        }
+      }
+    }
+
+    return TaskSummary(
+      completedCount: completed,
+      openCount: open,
+      dailyTotal: dailyTotal,
+      dailyCompleted: dailyCompleted,
+    );
+  }
+
+  List<MonthlyAllowanceEntry> mesadaPorMes(String childId) {
+    const monthNames = [
+      'Jan',
+      'Fev',
+      'Mar',
+      'Abr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Ago',
+      'Set',
+      'Out',
+      'Nov',
+      'Dez',
+    ];
+
+    final grouped = <String, double>{};
+    final labels = <String, String>{};
+
+    for (final tx in _transactions) {
+      if (tx.childId != childId ||
+          tx.origem != TransactionSource.mesada ||
+          !tx.isCredito) {
+        continue;
+      }
+      final key =
+          '${tx.data.year}-${tx.data.month.toString().padLeft(2, '0')}';
+      grouped[key] = (grouped[key] ?? 0.0) + tx.valor;
+      labels[key] = '${monthNames[tx.data.month - 1]}/${tx.data.year}';
+    }
+
+    final sortedKeys = grouped.keys.toList()..sort((a, b) => b.compareTo(a));
+    return sortedKeys
+        .map(
+          (k) => MonthlyAllowanceEntry(
+            monthKey: k,
+            monthLabel: labels[k] ?? k,
+            total: grouped[k] ?? 0.0,
+          ),
+        )
+        .toList();
+  }
+
+  void login(String userId) {
+    final found = _users.where((u) => u.id == userId).firstOrNull;
+    if (found == null) return;
+    _currentUser = found;
+    _isLoggedIn = true;
+    notifyListeners();
+  }
+
+  void logout() {
+    _isLoggedIn = false;
+    notifyListeners();
+  }
+
   void alternarUsuario([String? userId]) {
     if (userId != null) {
       final found = _users.where((u) => u.id == userId).firstOrNull;
       if (found != null) {
         _currentUser = found;
+        _isLoggedIn = true;
         notifyListeners();
         return;
       }
@@ -143,12 +321,14 @@ class AppState extends ChangeNotifier {
     final currentIndex = _users.indexWhere((u) => u.id == _currentUser.id);
     final nextIndex = (currentIndex + 1) % _users.length;
     _currentUser = _users[nextIndex];
+    _isLoggedIn = true;
     notifyListeners();
   }
 
   void cadastrarFilho({
     required String nome,
     required double saldoInicial,
+    int? idade,
   }) {
     final newChild = User(
       id: 'child-${DateTime.now().microsecondsSinceEpoch}',
@@ -156,6 +336,7 @@ class AppState extends ChangeNotifier {
       role: UserRole.child,
       avatarSeed: nome.toLowerCase(),
       saldo: saldoInicial,
+      idade: idade,
     );
 
     _users.add(newChild);
@@ -170,6 +351,7 @@ class AppState extends ChangeNotifier {
           data: DateTime.now(),
           tipo: TransactionType.credito,
           childId: newChild.id,
+          origem: TransactionSource.saldoInicial,
         ),
       );
     }
@@ -177,7 +359,12 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void transferirMoedas(String childId, double valor, {String? motivo}) {
+  void transferirMoedas(
+    String childId,
+    double valor, {
+    String? motivo,
+    TransactionSource origem = TransactionSource.mesada,
+  }) {
     if (valor <= 0) return;
 
     final childIndex = _users.indexWhere((u) => u.id == childId);
@@ -211,6 +398,7 @@ class AppState extends ChangeNotifier {
         data: DateTime.now(),
         tipo: TransactionType.credito,
         childId: childId,
+        origem: origem,
       ),
     );
 
@@ -221,6 +409,7 @@ class AppState extends ChangeNotifier {
     required String titulo,
     required double recompensa,
     required String atribuidaA,
+    TaskFrequency frequencia = TaskFrequency.unica,
   }) {
     final newTask = Task(
       id: 'task-${DateTime.now().microsecondsSinceEpoch}',
@@ -228,6 +417,7 @@ class AppState extends ChangeNotifier {
       recompensa: recompensa,
       status: TaskStatus.pending,
       atribuidaA: atribuidaA,
+      frequencia: frequencia,
     );
 
     _tasks.add(newTask);
@@ -253,7 +443,10 @@ class AppState extends ChangeNotifier {
     if (taskIndex == -1) return;
 
     final task = _tasks[taskIndex];
-    if (task.status == TaskStatus.completed) return;
+    if (task.status == TaskStatus.completed ||
+        task.status == TaskStatus.cancelled) {
+      return;
+    }
 
     _tasks[taskIndex] = task.copyWith(
       status: TaskStatus.completed,
@@ -278,6 +471,7 @@ class AppState extends ChangeNotifier {
           data: DateTime.now(),
           tipo: TransactionType.credito,
           childId: task.atribuidaA,
+          origem: TransactionSource.tarefa,
         ),
       );
     }
@@ -294,6 +488,21 @@ class AppState extends ChangeNotifier {
 
     _tasks[taskIndex] = task.copyWith(
       status: TaskStatus.pending,
+    );
+
+    notifyListeners();
+  }
+
+  /// Only the parent/responsible can cancel a pending or waitingApproval task.
+  void cancelarTarefaPeloPai(String taskId) {
+    final taskIndex = _tasks.indexWhere((t) => t.id == taskId);
+    if (taskIndex == -1) return;
+
+    final task = _tasks[taskIndex];
+    if (task.isCompleted || task.isCancelled) return;
+
+    _tasks[taskIndex] = task.copyWith(
+      status: TaskStatus.cancelled,
     );
 
     notifyListeners();

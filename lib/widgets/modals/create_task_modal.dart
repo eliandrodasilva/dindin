@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../models/models.dart';
 import '../../state/app_state.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
@@ -23,13 +24,9 @@ class CreateTaskModal extends StatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        side: BorderSide(
-          color: AppColors.border,
-          width: AppTheme.borderWidth,
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppTheme.borderRadiusLarge)),
       ),
       builder: (context) => CreateTaskModal(
         state: state,
@@ -46,6 +43,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
   final _titleController = TextEditingController();
   final _rewardController = TextEditingController(text: '10.00');
   late String _selectedChildId;
+  TaskFrequency _selectedFrequency = TaskFrequency.unica;
 
   @override
   void initState() {
@@ -75,6 +73,7 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
       titulo: title,
       recompensa: reward,
       atribuidaA: _selectedChildId,
+      frequencia: _selectedFrequency,
     );
 
     final childName = widget.state.users
@@ -99,27 +98,40 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
       padding: EdgeInsets.only(
         left: 20,
         right: 20,
-        top: 20,
+        top: 14,
         bottom: MediaQuery.of(context).viewInsets.bottom + 24,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Center(
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 'Criar Nova Tarefa 📋',
                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
                   color: AppColors.text,
+                  letterSpacing: -0.3,
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close_rounded, color: AppColors.text),
+                icon: const Icon(Icons.close_rounded, color: AppColors.textSecondary, size: 20),
                 onPressed: () => Navigator.pop(context),
+                visualDensity: VisualDensity.compact,
               ),
             ],
           ),
@@ -128,8 +140,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
             'Título da tarefa:',
             style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: AppColors.border,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
@@ -145,8 +157,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
             'Recompensa (R\$):',
             style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: AppColors.border,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
@@ -162,8 +174,8 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
             'Atribuir para:',
             style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: AppColors.border,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
@@ -173,7 +185,14 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
                 .map(
                   (c) => DropdownMenuItem(
                     value: c.id,
-                    child: Text(c.nome),
+                    child: Text(
+                      c.nome,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.text,
+                      ),
+                    ),
                   ),
                 )
                 .toList(),
@@ -183,14 +202,65 @@ class _CreateTaskModalState extends State<CreateTaskModal> {
               }
             },
           ),
+          const SizedBox(height: 14),
+          const Text(
+            'Tipo de tarefa:',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: TaskFrequency.values.map((freq) {
+              final isSelected = _selectedFrequency == freq;
+              return Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    right: freq != TaskFrequency.values.last ? 8 : 0,
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+                    onTap: () => setState(() => _selectedFrequency = freq),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.primary
+                            : AppColors.surfaceSubtle,
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.borderRadius),
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.primary
+                              : AppColors.border,
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        freq.label,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: isSelected
+                              ? AppColors.surface
+                              : AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
           const SizedBox(height: 20),
           FlatButton(
             text: 'Criar Tarefa',
             backgroundColor: AppColors.primary,
             icon: const Icon(
               Icons.add_task_rounded,
-              color: AppColors.text,
-              size: 20,
+              size: 18,
             ),
             padding: const EdgeInsets.symmetric(vertical: 14),
             isExpanded: true,
