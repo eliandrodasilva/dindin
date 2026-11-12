@@ -80,4 +80,34 @@ void main() {
     expect(find.text('- R\$ 320,00'), findsOneWidget);
     expect(find.text('R\$ 50,00'), findsOneWidget);
   });
+
+  testWidgets('FlatButton keeps icon centered next to text when expanded',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.theme,
+        home: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: FlatButton(
+              text: 'Enviar Mesada',
+              icon: const Icon(Icons.send_rounded, size: 18),
+              isExpanded: true,
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final buttonRect = tester.getRect(find.byType(FlatButton));
+    final iconRect = tester.getRect(find.byIcon(Icons.send_rounded));
+    final textRect = tester.getRect(find.text('Enviar Mesada'));
+
+    expect(iconRect.left, greaterThan(buttonRect.left));
+    expect(iconRect.right, lessThan(buttonRect.right));
+    expect(iconRect.top, greaterThanOrEqualTo(buttonRect.top));
+    expect(iconRect.bottom, lessThanOrEqualTo(buttonRect.bottom));
+    expect((textRect.left - iconRect.right).abs(), lessThanOrEqualTo(12));
+  });
 }

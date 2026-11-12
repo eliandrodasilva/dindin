@@ -25,11 +25,11 @@ void main() {
     );
 
     expect(find.text('GERENCIANDO FILHO'), findsOneWidget);
-    expect(find.text('Lucas'), findsWidgets);
+    expect(find.text('Helena'), findsWidgets);
     expect(find.text('Sofia'), findsWidgets);
     expect(find.text('+ Filho'), findsOneWidget);
 
-    expect(find.text('Ações Rápidas para Lucas'), findsOneWidget);
+    expect(find.text('Ações Rápidas para Helena'), findsOneWidget);
     expect(find.text('+5'), findsOneWidget);
     expect(find.text('+10'), findsOneWidget);
     expect(find.text('+20'), findsOneWidget);
@@ -54,7 +54,7 @@ void main() {
     expect(sofiaAfter, sofiaBefore + 10.0);
 
     expect(find.text('APROVAÇÕES PENDENTES'), findsOneWidget);
-    expect(find.text('Fazer o dever de casa de matemática'), findsOneWidget);
+    expect(find.text('Organizar a estante de livros e cadernos'), findsOneWidget);
 
     final lucasBeforeApproval =
         state.users.firstWhere((u) => u.id == 'child-1').saldo;

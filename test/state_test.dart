@@ -109,5 +109,44 @@ void main() {
       expect(newGoal.childId, 'child-1');
       expect(newGoal.progresso, 20.0 / 500.0);
     });
+
+    test('login and logout toggle isLoggedIn and set currentUser', () {
+      expect(state.isLoggedIn, isFalse);
+
+      state.login('child-1');
+      expect(state.isLoggedIn, isTrue);
+      expect(state.currentUser.id, 'child-1');
+
+      state.logout();
+      expect(state.isLoggedIn, isFalse);
+    });
+
+    test('criarTarefa supports frequency and cancelarTarefaPeloPai cancels task',
+        () {
+      state.criarTarefa(
+        titulo: 'Organizar mochila',
+        recompensa: 6.0,
+        atribuidaA: 'child-1',
+        frequencia: TaskFrequency.diaria,
+      );
+
+      final created = state.tasks.last;
+      expect(created.frequencia, TaskFrequency.diaria);
+      expect(created.status, TaskStatus.pending);
+
+      state.cancelarTarefaPeloPai(created.id);
+      final cancelled = state.tasks.firstWhere((t) => t.id == created.id);
+      expect(cancelled.status, TaskStatus.cancelled);
+    });
+
+    test('mesadaPorMes aggregates monthly allowance and summaryForTasks calculates daily progress',
+        () {
+      final monthly = state.mesadaPorMes('child-1');
+      expect(monthly.isNotEmpty, isTrue);
+
+      final summary = state.summaryForTasks(state.tasksForChild('child-1'));
+      expect(summary.dailyTotal, greaterThanOrEqualTo(2));
+      expect(summary.completedCount, greaterThanOrEqualTo(1));
+    });
   });
 }

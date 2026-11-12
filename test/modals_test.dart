@@ -87,9 +87,9 @@ void main() {
     await tester.tap(find.text('Confirmar Envio'));
     await tester.pumpAndSettle();
 
-    final lucasAfter = state.users.firstWhere((u) => u.id == 'child-1').saldo;
-    expect(lucasAfter, lucasBefore + 15.0);
-    expect(find.text('Enviado +R\$ 15.00 para Lucas com sucesso!'),
+    final helenaAfter = state.users.firstWhere((u) => u.id == 'child-1').saldo;
+    expect(helenaAfter, lucasBefore + 15.0);
+    expect(find.text('Enviado +R\$ 15.00 para Helena com sucesso!'),
         findsOneWidget);
   });
 

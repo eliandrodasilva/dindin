@@ -26,17 +26,17 @@ void main() {
 
     expect(find.text('OLÁ, SOFIA! ⭐'), findsOneWidget);
     expect(find.text('Meu Cofrinho'), findsOneWidget);
-    expect(find.text('R\$ 30.00'), findsOneWidget);
+    expect(find.text('R\$ 40.00'), findsOneWidget);
 
     expect(find.text('MINHAS METAS'), findsOneWidget);
     expect(find.text('Patins Coloridos'), findsOneWidget);
 
     expect(find.text('TAREFAS DO DIA'), findsOneWidget);
-    expect(find.text('Guardar os brinquedos'), findsOneWidget);
+    expect(find.text('Limpar e organizar a mesa de estudos'), findsOneWidget);
     expect(find.text('Feito!'), findsWidgets);
 
     expect(find.text('ÚLTIMAS TRANSAÇÕES'), findsOneWidget);
-    expect(find.text('Mesada semanal'), findsOneWidget);
+    expect(find.text('Mesada do mês'), findsOneWidget);
 
     final feitoButton = find.text('Feito!').first;
     await tester.ensureVisible(feitoButton);
@@ -45,7 +45,7 @@ void main() {
 
     expect(find.text('Aguardando aprovação dos pais'), findsOneWidget);
     expect(
-      state.tasks.firstWhere((t) => t.titulo == 'Guardar os brinquedos').status,
+      state.tasks.firstWhere((t) => t.titulo == 'Limpar e organizar a mesa de estudos').status,
       TaskStatus.waitingApproval,
     );
   });

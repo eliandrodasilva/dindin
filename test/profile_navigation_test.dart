@@ -1,69 +1,86 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dindin/pages/home_page.dart';
-import 'package:dindin/screens/child_dashboard_screen.dart';
-import 'package:dindin/screens/parent_dashboard_screen.dart';
+import 'package:dindin/main.dart';
+import 'package:dindin/models/models.dart';
+import 'package:dindin/screens/child_tabs.dart';
+import 'package:dindin/screens/login_screen.dart';
+import 'package:dindin/screens/parent_tabs.dart';
+import 'package:dindin/screens/shared_tabs.dart';
 import 'package:dindin/state/app_state.dart';
-import 'package:dindin/state/app_state_scope.dart';
-import 'package:dindin/theme/app_theme.dart';
-import 'package:dindin/widgets/profile_header_bar.dart';
-import 'package:dindin/widgets/profile_selector_sheet.dart';
 
 void main() {
   testWidgets(
-      'HomePage renders ParentDashboardScreen for parent and switches to ChildDashboardScreen',
+      'Login flow, fixed 5-tab bottom bar for parent and child, blank settings, and logout',
       (tester) async {
-    final appState = AppState();
+    final appState = AppState(initialLoggedIn: false);
 
-    await tester.pumpWidget(
-      AppStateScope(
-        notifier: appState,
-        child: MaterialApp(
-          theme: AppTheme.theme,
-          home: const HomePage(),
-        ),
-      ),
-    );
-
-    expect(find.byType(ProfileHeaderBar), findsOneWidget);
-    expect(find.byType(ParentDashboardScreen), findsOneWidget);
-    expect(find.byType(ChildDashboardScreen), findsNothing);
-    expect(find.text('RESPONSÁVEL'), findsWidgets);
-
-    await tester.tap(find.text('Trocar'));
+    await tester.pumpWidget(DinDinApp(initialState: appState));
     await tester.pumpAndSettle();
 
-    expect(find.byType(ProfileSelectorSheet), findsOneWidget);
-    expect(find.text('Trocar de Perfil'), findsOneWidget);
-    expect(find.text('MODO FILHO'), findsOneWidget);
+    // 1. Starts on LoginScreen with 1 parent and 2 daughters
+    expect(find.byType(LoginScreen), findsOneWidget);
+    expect(find.text('Carlos (Pai)'), findsOneWidget);
+    expect(find.text('Helena'), findsOneWidget);
+    expect(find.text('Sofia'), findsOneWidget);
 
-    final lucasInSheet = find.descendant(
-      of: find.byType(ProfileSelectorSheet),
-      matching: find.text('Lucas'),
-    );
-    expect(lucasInSheet, findsOneWidget);
-
-    await tester.tap(lucasInSheet);
+    // 2. Log in as Parent -> lands on ParentHomeTab (center Home tab)
+    await tester.tap(find.text('Carlos (Pai)'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(ChildDashboardScreen), findsOneWidget);
-    expect(find.byType(ParentDashboardScreen), findsNothing);
-    expect(find.text('OLÁ, LUCAS! ⭐'), findsOneWidget);
+    expect(find.byType(ParentHomeTab), findsOneWidget);
+    expect(find.text('FILHOS CONECTADOS'), findsOneWidget);
+    expect(find.text('MÉDIA & PROGRESSÃO DIÁRIA'), findsOneWidget);
+    expect(find.text('TAREFAS ATIVAS'), findsOneWidget);
+
+    // 3. Navigate Parent bottom bar tabs: Tarefas, Filhos, Config., Perfil
+    await tester.tap(find.text('Tarefas'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ParentTasksTab), findsOneWidget);
+
+    await tester.tap(find.text('Filhos'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ParentChildrenTab), findsOneWidget);
+    expect(find.textContaining('MESADA POR MÊS'), findsOneWidget);
+    expect(find.textContaining('EXTRATO DO COFRINHO'), findsOneWidget);
+
+    await tester.tap(find.text('Config.'));
+    await tester.pumpAndSettle();
+    expect(find.byType(SettingsBlankTab), findsOneWidget);
+
+    await tester.tap(find.text('Perfil'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ProfileTab), findsOneWidget);
+    expect(find.text('Sair da conta'), findsOneWidget);
+
+    // 4. Logout returns to LoginScreen
+    await tester.tap(find.text('Sair da conta'));
+    await tester.pumpAndSettle();
+    expect(find.byType(LoginScreen), findsOneWidget);
+
+    // 5. Log in as Daughter (Helena) -> lands on ChildHomeTab
+    await tester.tap(find.text('Helena'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ChildHomeTab), findsOneWidget);
+    expect(find.text('OLÁ, HELENA! ⭐'), findsOneWidget);
     expect(find.text('Meu Cofrinho'), findsOneWidget);
 
-    await tester.tap(find.text('Trocar'));
+    // 6. Navigate Child bottom bar tabs: Tarefas, Desejos, Config., Perfil
+    await tester.tap(find.text('Tarefas'));
     await tester.pumpAndSettle();
+    expect(find.byType(ChildTasksTab), findsOneWidget);
+    expect(find.text(TaskFrequency.diaria.label), findsWidgets);
 
-    final parentInSheet = find.descendant(
-      of: find.byType(ProfileSelectorSheet),
-      matching: find.text('Carlos (Pai)'),
-    );
-    expect(parentInSheet, findsOneWidget);
-
-    await tester.tap(parentInSheet);
+    await tester.tap(find.text('Desejos'));
     await tester.pumpAndSettle();
+    expect(find.byType(ChildWishlistTab), findsOneWidget);
+    expect(find.text('LISTA DE DESEJOS & METAS'), findsOneWidget);
 
-    expect(find.byType(ParentDashboardScreen), findsOneWidget);
-    expect(find.byType(ChildDashboardScreen), findsNothing);
+    await tester.tap(find.text('Config.'));
+    await tester.pumpAndSettle();
+    expect(find.byType(SettingsBlankTab), findsOneWidget);
+
+    await tester.tap(find.text('Perfil'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ProfileTab), findsOneWidget);
   });
 }
