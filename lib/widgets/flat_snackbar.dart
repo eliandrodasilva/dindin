@@ -14,23 +14,30 @@ abstract final class FlatSnackBar {
     required String message,
     FlatSnackBarType type = FlatSnackBarType.success,
     IconData? icon,
-    Duration duration = const Duration(milliseconds: 2500),
+    Duration duration = const Duration(milliseconds: 2800),
   }) {
     final messenger = ScaffoldMessenger.of(context);
     messenger.hideCurrentSnackBar();
 
-    final backgroundColor = switch (type) {
-      FlatSnackBarType.success => AppColors.success,
-      FlatSnackBarType.info => AppColors.primary,
-      FlatSnackBarType.alert => AppColors.alert,
+    final (accentColor, iconBgColor, defaultIcon) = switch (type) {
+      FlatSnackBarType.success => (
+          AppColors.success,
+          AppColors.successSubtle,
+          Icons.check_circle_rounded,
+        ),
+      FlatSnackBarType.info => (
+          AppColors.primaryAccent,
+          AppColors.infoSubtle,
+          Icons.info_rounded,
+        ),
+      FlatSnackBarType.alert => (
+          AppColors.alert,
+          AppColors.alertSubtle,
+          Icons.error_outline_rounded,
+        ),
     };
 
-    final effectiveIcon = icon ??
-        switch (type) {
-          FlatSnackBarType.success => Icons.check_circle_rounded,
-          FlatSnackBarType.info => Icons.stars_rounded,
-          FlatSnackBarType.alert => Icons.error_outline_rounded,
-        };
+    final effectiveIcon = icon ?? defaultIcon;
 
     messenger.showSnackBar(
       SnackBar(
@@ -38,31 +45,44 @@ abstract final class FlatSnackBar {
         elevation: 0,
         behavior: SnackBarBehavior.floating,
         duration: duration,
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 20),
         padding: EdgeInsets.zero,
         content: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: AppColors.border,
               width: AppTheme.borderWidth,
             ),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                color: AppColors.border,
-                offset: AppTheme.shadowOffset,
-                blurRadius: 0,
+                color: const Color(0xFF0F172A).withValues(alpha: 0.10),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
+              ),
+              BoxShadow(
+                color: const Color(0xFF0F172A).withValues(alpha: 0.04),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
           child: Row(
             children: [
-              Icon(
-                effectiveIcon,
-                color: AppColors.text,
-                size: 24,
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: iconBgColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  effectiveIcon,
+                  color: accentColor,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -71,7 +91,8 @@ abstract final class FlatSnackBar {
                   style: const TextStyle(
                     color: AppColors.text,
                     fontSize: 14,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.2,
                   ),
                 ),
               ),

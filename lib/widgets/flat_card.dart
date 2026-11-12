@@ -32,50 +32,58 @@ class FlatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cardContent = Container(
+    final hasShadow = shadowOffset != Offset.zero;
+
+    Widget cardContent = Container(
       width: width,
       height: height,
       padding: padding,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(
-          color: borderColor,
-          width: borderWidth,
-        ),
-        boxShadow: shadowOffset == Offset.zero
-            ? null
-            : [
+        border: borderWidth > 0
+            ? Border.all(
+                color: borderColor,
+                width: borderWidth,
+              )
+            : null,
+        boxShadow: hasShadow
+            ? [
                 BoxShadow(
-                  color: borderColor,
-                  offset: shadowOffset,
-                  blurRadius: 0,
+                  color: const Color(0xFF0F172A).withValues(alpha: 0.04),
+                  blurRadius: 14,
+                  offset: const Offset(0, 3),
                   spreadRadius: 0,
                 ),
-              ],
+                BoxShadow(
+                  color: const Color(0xFF0F172A).withValues(alpha: 0.02),
+                  blurRadius: 4,
+                  offset: const Offset(0, 1),
+                  spreadRadius: 0,
+                ),
+              ]
+            : null,
       ),
       child: child,
     );
 
-    if (margin != null) {
-      if (onTap != null) {
-        return Padding(
-          padding: margin!,
-          child: GestureDetector(
-            onTap: onTap,
-            child: cardContent,
-          ),
-        );
-      }
-      return Padding(
-        padding: margin!,
-        child: cardContent,
+    if (onTap != null) {
+      cardContent = Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(borderRadius),
+          splashColor: AppColors.text.withValues(alpha: 0.05),
+          highlightColor: AppColors.text.withValues(alpha: 0.03),
+          child: cardContent,
+        ),
       );
     }
 
-    if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
+    if (margin != null) {
+      return Padding(
+        padding: margin!,
         child: cardContent,
       );
     }

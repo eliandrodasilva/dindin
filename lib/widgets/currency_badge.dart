@@ -16,12 +16,12 @@ class CurrencyBadge extends StatelessWidget {
     this.type,
     this.backgroundColor,
     this.textColor,
-    this.borderColor = AppColors.border,
+    this.borderColor,
     this.borderWidth = AppTheme.borderWidth,
     this.borderRadius = 8.0,
-    this.shadowOffset = AppTheme.shadowOffsetSmall,
-    this.padding = const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-    this.fontSize = 14,
+    this.shadowOffset = Offset.zero,
+    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    this.fontSize = 13,
     this.showSign = true,
     this.icon,
   });
@@ -30,56 +30,56 @@ class CurrencyBadge extends StatelessWidget {
     super.key,
     required this.amount,
     this.currencySymbol = 'R\$',
-    this.borderColor = AppColors.border,
+    this.backgroundColor,
+    this.textColor,
+    this.borderColor,
     this.borderWidth = AppTheme.borderWidth,
     this.borderRadius = 8.0,
-    this.shadowOffset = AppTheme.shadowOffsetSmall,
-    this.padding = const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-    this.fontSize = 14,
+    this.shadowOffset = Offset.zero,
+    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    this.fontSize = 13,
     this.showSign = true,
     this.icon,
-  })  : type = CurrencyBadgeType.income,
-        backgroundColor = AppColors.success,
-        textColor = AppColors.text;
+  })  : type = CurrencyBadgeType.income;
 
   const CurrencyBadge.expense({
     super.key,
     required this.amount,
     this.currencySymbol = 'R\$',
-    this.borderColor = AppColors.border,
+    this.backgroundColor,
+    this.textColor,
+    this.borderColor,
     this.borderWidth = AppTheme.borderWidth,
     this.borderRadius = 8.0,
-    this.shadowOffset = AppTheme.shadowOffsetSmall,
-    this.padding = const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-    this.fontSize = 14,
+    this.shadowOffset = Offset.zero,
+    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    this.fontSize = 13,
     this.showSign = true,
     this.icon,
-  })  : type = CurrencyBadgeType.expense,
-        backgroundColor = AppColors.alert,
-        textColor = AppColors.text;
+  })  : type = CurrencyBadgeType.expense;
 
   const CurrencyBadge.neutral({
     super.key,
     required this.amount,
     this.currencySymbol = 'R\$',
-    this.borderColor = AppColors.border,
+    this.backgroundColor,
+    this.textColor,
+    this.borderColor,
     this.borderWidth = AppTheme.borderWidth,
     this.borderRadius = 8.0,
-    this.shadowOffset = AppTheme.shadowOffsetSmall,
-    this.padding = const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-    this.fontSize = 14,
+    this.shadowOffset = Offset.zero,
+    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    this.fontSize = 13,
     this.showSign = false,
     this.icon,
-  })  : type = CurrencyBadgeType.neutral,
-        backgroundColor = AppColors.surface,
-        textColor = AppColors.text;
+  })  : type = CurrencyBadgeType.neutral;
 
   final num amount;
   final String currencySymbol;
   final CurrencyBadgeType? type;
   final Color? backgroundColor;
   final Color? textColor;
-  final Color borderColor;
+  final Color? borderColor;
   final double borderWidth;
   final double borderRadius;
   final Offset shadowOffset;
@@ -106,9 +106,9 @@ class CurrencyBadge extends StatelessWidget {
       return backgroundColor!;
     }
     return switch (_resolvedType) {
-      CurrencyBadgeType.income => AppColors.success,
-      CurrencyBadgeType.expense => AppColors.alert,
-      CurrencyBadgeType.neutral => AppColors.surface,
+      CurrencyBadgeType.income => AppColors.successSubtle,
+      CurrencyBadgeType.expense => AppColors.alertSubtle,
+      CurrencyBadgeType.neutral => AppColors.surfaceSubtle,
     };
   }
 
@@ -116,7 +116,22 @@ class CurrencyBadge extends StatelessWidget {
     if (textColor != null) {
       return textColor!;
     }
-    return AppColors.text;
+    return switch (_resolvedType) {
+      CurrencyBadgeType.income => AppColors.successText,
+      CurrencyBadgeType.expense => AppColors.alertText,
+      CurrencyBadgeType.neutral => AppColors.text,
+    };
+  }
+
+  Color get _resolvedBorderColor {
+    if (borderColor != null) {
+      return borderColor!;
+    }
+    return switch (_resolvedType) {
+      CurrencyBadgeType.income => const Color(0xFFA7F3D0),
+      CurrencyBadgeType.expense => const Color(0xFFFECACA),
+      CurrencyBadgeType.neutral => AppColors.border,
+    };
   }
 
   String _formatValue() {
@@ -157,19 +172,9 @@ class CurrencyBadge extends StatelessWidget {
         color: _resolvedBackgroundColor,
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(
-          color: borderColor,
+          color: _resolvedBorderColor,
           width: borderWidth,
         ),
-        boxShadow: shadowOffset == Offset.zero
-            ? null
-            : [
-                BoxShadow(
-                  color: borderColor,
-                  offset: shadowOffset,
-                  blurRadius: 0,
-                  spreadRadius: 0,
-                ),
-              ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -181,10 +186,12 @@ class CurrencyBadge extends StatelessWidget {
           ],
           Text(
             _formatValue(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: _resolvedTextColor,
               fontSize: fontSize,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w700,
               letterSpacing: -0.2,
             ),
           ),
