@@ -10,6 +10,7 @@ class User {
     required this.role,
     required this.avatarSeed,
     required this.saldo,
+    this.idade,
   });
 
   final String id;
@@ -17,6 +18,7 @@ class User {
   final UserRole role;
   final String avatarSeed;
   final double saldo;
+  final int? idade;
 
   bool get isParent => role == UserRole.parent;
   bool get isChild => role == UserRole.child;
@@ -27,6 +29,7 @@ class User {
     UserRole? role,
     String? avatarSeed,
     double? saldo,
+    int? idade,
   }) {
     return User(
       id: id ?? this.id,
@@ -34,6 +37,7 @@ class User {
       role: role ?? this.role,
       avatarSeed: avatarSeed ?? this.avatarSeed,
       saldo: saldo ?? this.saldo,
+      idade: idade ?? this.idade,
     );
   }
 }
