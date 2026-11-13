@@ -19,123 +19,134 @@ class LoginScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 12),
-              Center(
-                child: Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(18),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.16),
-                        blurRadius: 18,
-                        offset: const Offset(0, 6),
+      body: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            color: AppColors.primary,
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: const BoxDecoration(
+                        color: AppColors.primaryLight,
+                        shape: BoxShape.circle,
                       ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.savings_rounded,
-                    color: AppColors.surface,
-                    size: 32,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'DinDin',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.text,
-                  letterSpacing: -0.6,
-                ),
-              ),
-              const SizedBox(height: 6),
-              const SizedBox(height: 28),
-              if (parentUser != null) ...[
-                const Text(
-                  'CONTA DO RESPONSÁVEL',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textSecondary,
-                    letterSpacing: 0.6,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                _MockAccountCard(
-                  user: parentUser,
-                  subtitle: '',
-                  badgeLabel: 'Responsável',
-                  badgeBg: AppColors.primary,
-                  badgeFg: AppColors.surface,
-                  onTap: () => appState.login(parentUser.id),
-                ),
-                const SizedBox(height: 22),
-              ],
-              const Text(
-                'CONTAS DAS FILHAS',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textSecondary,
-                  letterSpacing: 0.6,
-                ),
-              ),
-              const SizedBox(height: 10),
-              ...childUsers.map(
-                (child) => Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: _MockAccountCard(
-                    user: child,
-                    subtitle: child.idade != null
-                        ? '${child.idade} anos • Cofrinho R\$ ${child.saldo.toStringAsFixed(2)}'
-                        : 'Cofrinho R\$ ${child.saldo.toStringAsFixed(2)}',
-                    badgeLabel: 'Filha',
-                    badgeBg: AppColors.infoSubtle,
-                    badgeFg: AppColors.infoText,
-                    onTap: () => appState.login(child.id),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 14),
-              FlatCard(
-                backgroundColor: AppColors.surfaceSubtle,
-                padding: const EdgeInsets.all(14),
-                child: Row(
-                  children: const [
-                    Icon(
-                      Icons.shield_outlined,
-                      size: 18,
-                      color: AppColors.textSecondary,
+                      child: const Icon(
+                        Icons.savings_outlined,
+                        color: AppColors.surface,
+                        size: 24,
+                      ),
                     ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        'Contas infantis só podem ser criadas a partir da conta do responsável.',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
-                          height: 1.35,
-                        ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'DinDin',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.surface,
+                        letterSpacing: -0.5,
                       ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Finanças',
+                      style: TextStyle(fontSize: 13, color: Colors.white70),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (parentUser != null) ...[
+                    const Text(
+                      'CONTA DO RESPONSÁVEL',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textSecondary,
+                        letterSpacing: 0.6,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    _MockAccountCard(
+                      user: parentUser,
+                      subtitle: '',
+                      badgeLabel: 'Responsável',
+                      badgeBg: AppColors.primary,
+                      badgeFg: AppColors.surface,
+                      onTap: () => appState.login(parentUser.id),
+                    ),
+                    const SizedBox(height: 22),
+                  ],
+                  const Text(
+                    'CONTAS DAS FILHAS',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textSecondary,
+                      letterSpacing: 0.6,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ...childUsers.map(
+                    (child) => Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: _MockAccountCard(
+                        user: child,
+                        subtitle: child.idade != null
+                            ? '${child.idade} anos • Cofrinho R\$ ${child.saldo.toStringAsFixed(2)}'
+                            : 'Cofrinho R\$ ${child.saldo.toStringAsFixed(2)}',
+                        badgeLabel: 'Filha',
+                        badgeBg: AppColors.infoSubtle,
+                        badgeFg: AppColors.infoText,
+                        onTap: () => appState.login(child.id),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  FlatCard(
+                    backgroundColor: AppColors.surfaceSubtle,
+                    padding: const EdgeInsets.all(14),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.shield_outlined,
+                          size: 18,
+                          color: AppColors.textSecondary,
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'Contas infantis só podem ser criadas a partir da conta do responsável.',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                              height: 1.35,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
