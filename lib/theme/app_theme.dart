@@ -3,40 +3,21 @@ import 'package:flutter/services.dart';
 import 'app_colors.dart';
 
 abstract final class AppTheme {
-  // Consistent spacing & corner radius system
+  // Reference Design System Tokens: Spacing & Radii
   static const double borderWidth = 1.0;
-  static const double borderRadius = 16.0;
-  static const double borderRadiusSmall = 10.0;
-  static const double borderRadiusLarge = 24.0;
+  static const double borderRadius = 12.0; // Standard grouped card radius
+  static const double borderRadiusSmall = 8.0; // Compact button & input radius
+  static const double borderRadiusLarge = 16.0;
   static const double borderRadiusPill = 999.0;
+  static const double sectionPaddingH = 20.0;
 
-  // Elevation & soft shadows
-  static const Offset shadowOffset = Offset(0, 2);
-  static const Offset shadowOffsetSmall = Offset(0, 1);
+  // No heavy drop shadows in the reference UI
+  static const Offset shadowOffset = Offset.zero;
+  static const Offset shadowOffsetSmall = Offset.zero;
 
-  static List<BoxShadow> get softShadow => [
-        BoxShadow(
-          color: const Color(0xFF0F172A).withValues(alpha: 0.04),
-          blurRadius: 16,
-          offset: const Offset(0, 4),
-          spreadRadius: 0,
-        ),
-        BoxShadow(
-          color: const Color(0xFF0F172A).withValues(alpha: 0.02),
-          blurRadius: 4,
-          offset: const Offset(0, 1),
-          spreadRadius: 0,
-        ),
-      ];
+  static List<BoxShadow> get softShadow => const [];
 
-  static List<BoxShadow> get softShadowSm => [
-        BoxShadow(
-          color: const Color(0xFF0F172A).withValues(alpha: 0.04),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-          spreadRadius: 0,
-        ),
-      ];
+  static List<BoxShadow> get softShadowSm => const [];
 
   static ThemeData get theme {
     const borderSide = BorderSide(
@@ -98,7 +79,7 @@ abstract final class AppTheme {
           shadowColor: Colors.transparent,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadiusSmall),
+            borderRadius: BorderRadius.circular(borderRadiusPill),
           ),
           textStyle: const TextStyle(
             fontSize: 15,
@@ -115,7 +96,7 @@ abstract final class AppTheme {
           side: borderSide,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadiusSmall),
+            borderRadius: BorderRadius.circular(borderRadiusPill),
           ),
           textStyle: const TextStyle(
             fontSize: 15,
@@ -130,11 +111,11 @@ abstract final class AppTheme {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadiusSmall),
-          borderSide: borderSide,
+          borderSide: const BorderSide(color: AppColors.border, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadiusSmall),
-          borderSide: borderSide,
+          borderSide: const BorderSide(color: AppColors.border, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadiusSmall),
