@@ -35,64 +35,44 @@ class ChildHomeTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            padding: const EdgeInsets.all(22),
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(AppTheme.borderRadiusLarge),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.14),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.14),
-                    borderRadius:
-                        BorderRadius.circular(AppTheme.borderRadiusPill),
-                  ),
-                  child: Text(
-                    'OLÁ, ${child.nome.toUpperCase()}! ⭐',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                      letterSpacing: 0.4,
-                    ),
+                Text(
+                  'OLÁ, ${child.nome.toUpperCase()}! ⭐',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textSecondary,
+                    letterSpacing: 0.4,
                   ),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 6),
                 const Text(
                   'Meu Cofrinho',
                   style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white70,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.text,
+                    letterSpacing: -0.3,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   'R\$ ${child.saldo.toStringAsFixed(2)}',
                   style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                    letterSpacing: -0.8,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.text,
+                    letterSpacing: -0.6,
                   ),
                 ),
               ],
             ),
           ),
+          const Divider(height: 28, thickness: 1, color: AppColors.border),
           const SizedBox(height: 18),
           TaskProgressSummaryCard(
             summary: summary,
@@ -103,12 +83,12 @@ class ChildHomeTab extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'TAREFAS ATIVAS',
+                'Tarefas ativas',
                 style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textSecondary,
-                  letterSpacing: 0.6,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.text,
+                  letterSpacing: -0.3,
                 ),
               ),
               Text(
@@ -251,12 +231,12 @@ class ChildWishlistTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              'LISTA DE DESEJOS & METAS',
+              'Lista de desejos e metas',
               style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textSecondary,
-                letterSpacing: 0.6,
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: AppColors.text,
+                letterSpacing: -0.3,
               ),
             ),
             const SizedBox(height: 10),
@@ -455,16 +435,8 @@ class _ChildTaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (statusBg, statusFg) = switch (task.status) {
-      TaskStatus.pending => (AppColors.surfaceSubtle, AppColors.textSecondary),
-      TaskStatus.waitingApproval =>
-        (AppColors.warningSubtle, AppColors.warningText),
-      TaskStatus.completed => (AppColors.successSubtle, AppColors.successText),
-      TaskStatus.cancelled => (AppColors.alertSubtle, AppColors.alertText),
-    };
-
-    return FlatCard(
-      padding: const EdgeInsets.all(14),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -472,69 +444,65 @@ class _ChildTaskCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    TaskTypeBadge(frequencia: task.frequencia),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: statusBg,
-                        borderRadius:
-                            BorderRadius.circular(AppTheme.borderRadiusPill),
-                      ),
-                      child: Text(
-                        task.status.label,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: statusFg,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  task.titulo,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: task.isCancelled
+                        ? AppColors.textMuted
+                        : AppColors.text,
+                    decoration:
+                        task.isCancelled ? TextDecoration.lineThrough : null,
+                  ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               Text(
                 '+ R\$ ${task.recompensa.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.successText,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.text,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Text(
-            task.titulo,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: task.isCancelled ? AppColors.textMuted : AppColors.text,
-              decoration:
-                  task.isCancelled ? TextDecoration.lineThrough : null,
-            ),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              TaskTypeBadge(frequencia: task.frequencia),
+              Text(
+                '• ${task.status.label}',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: task.isWaitingApproval
+                      ? FontWeight.w600
+                      : FontWeight.w400,
+                  color: task.isWaitingApproval
+                      ? AppColors.primary
+                      : AppColors.textSecondary,
+                ),
+              ),
+            ],
           ),
           if (task.isPending) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             FlatButton(
               text: 'Marcar como Feita',
-              backgroundColor: AppColors.primaryAccent,
-              icon: const Icon(Icons.check_circle_outline_rounded, size: 17),
-              isExpanded: true,
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              backgroundColor: AppColors.primary,
+              fontSize: 13,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
               onPressed: () {
                 state.concluirTarefaPelaCrianca(task.id);
                 FlatSnackBar.show(
                   context,
-                  message:
-                      'Tarefa enviada para confirmação do responsável!',
+                  message: 'Tarefa enviada para confirmação do responsável!',
                   type: FlatSnackBarType.info,
                 );
               },
