@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:dindin/screens/child_tabs.dart';
+import 'package:dindin/state/app_state.dart';
 import 'package:dindin/theme/app_colors.dart';
 import 'package:dindin/theme/app_theme.dart';
 import 'package:dindin/widgets/widgets.dart';
@@ -109,5 +111,28 @@ void main() {
     expect(iconRect.top, greaterThanOrEqualTo(buttonRect.top));
     expect(iconRect.bottom, lessThanOrEqualTo(buttonRect.bottom));
     expect((textRect.left - iconRect.right).abs(), lessThanOrEqualTo(12));
+  });
+
+  testWidgets('ChildWishlistTab progress bar updates when cofrinho changes',
+      (tester) async {
+    final state = AppState(initialLoggedIn: true);
+    state.login('child-1'); // Helena, saldo 65.0, goal-1 valorAlvo 150.0
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.theme,
+        home: ChildWishlistTab(state: state),
+      ),
+    );
+
+    // 65 / 150 = 43%
+    expect(find.text('43%'), findsOneWidget);
+
+    // Increase cofrinho by 85.0 -> 150.0 (100%)
+    state.transferirMoedas('child-1', 85.0);
+    await tester.pumpAndSettle();
+
+    expect(find.text('100%'), findsOneWidget);
+    expect(find.text('Confirmar compra'), findsOneWidget);
   });
 }

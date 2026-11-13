@@ -148,5 +148,28 @@ void main() {
       expect(summary.dailyTotal, greaterThanOrEqualTo(2));
       expect(summary.completedCount, greaterThanOrEqualTo(1));
     });
+
+    test('comprarMeta deducts target amount from cofrinho and records debit', () {
+      state.adicionarMeta(
+        titulo: 'Livro Ilustrado',
+        valorAlvo: 50.0,
+        childId: 'child-1',
+      );
+      final goal = state.goals.last;
+      final balanceBefore =
+          state.users.firstWhere((u) => u.id == 'child-1').saldo;
+
+      state.comprarMeta(goal.id);
+
+      final updatedGoal = state.goals.firstWhere((g) => g.id == goal.id);
+      final balanceAfter =
+          state.users.firstWhere((u) => u.id == 'child-1').saldo;
+
+      expect(updatedGoal.comprado, isTrue);
+      expect(balanceAfter, balanceBefore - 50.0);
+      expect(state.transactions.first.tipo, TransactionType.debito);
+      expect(state.transactions.first.valor, 50.0);
+      expect(state.transactions.first.titulo, 'Compra: Livro Ilustrado');
+    });
   });
 }

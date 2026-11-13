@@ -200,10 +200,13 @@ class ChildWishlistTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final child = state.currentUser;
-    final goals = state.goalsForChild(child.id);
+    return AnimatedBuilder(
+      animation: state,
+      builder: (context, _) {
+        final child = state.currentUser;
+        final goals = state.goalsForChild(child.id);
 
-    return Scaffold(
+        return Scaffold(
       backgroundColor: Colors.transparent,
       floatingActionButton: FloatingActionButton.extended(
         elevation: 0,
@@ -254,11 +257,12 @@ class ChildWishlistTab extends StatelessWidget {
             else
               ...goals.map((goal) {
                 final savedAmount =
-                    child.saldo > goal.valorAtual ? child.saldo : goal.valorAtual;
+                    goal.comprado ? goal.valorAlvo : child.saldo;
                 final progress = goal.valorAlvo <= 0
                     ? 0.0
                     : (savedAmount / goal.valorAlvo).clamp(0.0, 1.0);
-                final reached = savedAmount >= goal.valorAlvo;
+                final reached = goal.comprado || savedAmount >= goal.valorAlvo;
+                final canBuy = !goal.comprado && child.saldo >= goal.valorAlvo;
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 12),
@@ -269,24 +273,14 @@ class ChildWishlistTab extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: reached
-                                    ? AppColors.successSubtle
-                                    : AppColors.infoSubtle,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Icon(
-                                reached
-                                    ? Icons.celebration_rounded
-                                    : Icons.star_rounded,
-                                color: reached
-                                    ? AppColors.successText
-                                    : AppColors.infoText,
-                                size: 20,
-                              ),
+                            Icon(
+                              goal.comprado
+                                  ? Icons.check_circle_outline_rounded
+                                  : Icons.star_outline_rounded,
+                              color: goal.comprado
+                                  ? AppColors.successText
+                                  : AppColors.text,
+                              size: 22,
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -297,7 +291,7 @@ class ChildWishlistTab extends StatelessWidget {
                                     goal.titulo,
                                     style: const TextStyle(
                                       fontSize: 15,
-                                      fontWeight: FontWeight.w700,
+                                      fontWeight: FontWeight.w600,
                                       color: AppColors.text,
                                     ),
                                   ),
@@ -312,27 +306,16 @@ class ChildWishlistTab extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: reached
-                                    ? AppColors.successSubtle
-                                    : AppColors.surfaceSubtle,
-                                borderRadius: BorderRadius.circular(
-                                    AppTheme.borderRadiusPill),
-                              ),
-                              child: Text(
-                                '${(progress * 100).round()}%',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: reached
-                                      ? AppColors.successText
-                                      : AppColors.textSecondary,
-                                ),
+                            Text(
+                              goal.comprado
+                                  ? 'Comprado'
+                                  : '${(progress * 100).round()}%',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: goal.comprado || reached
+                                    ? AppColors.successText
+                                    : AppColors.textSecondary,
                               ),
                             ),
                           ],
@@ -343,28 +326,96 @@ class ChildWishlistTab extends StatelessWidget {
                               BorderRadius.circular(AppTheme.borderRadiusPill),
                           child: LinearProgressIndicator(
                             value: progress,
-                            minHeight: 8,
-                            backgroundColor: AppColors.surfaceSubtle,
+                            minHeight: 6,
+                            backgroundColor: AppColors.border,
                             valueColor: AlwaysStoppedAnimation<Color>(
                               reached
                                   ? AppColors.success
-                                  : AppColors.primaryAccent,
+                                  : AppColors.primary,
                             ),
                           ),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          reached
-                              ? 'Você já atingiu o valor dessa meta!'
-                              : 'Faltam R\$ ${(goal.valorAlvo - savedAmount).toStringAsFixed(2)} no cofrinho',
+                          goal.comprado
+                              ? 'Item comprado! Valor extraído do cofrinho.'
+                              : reached
+                                  ? 'Você já atingiu o valor dessa meta!'
+                                  : 'Faltam R\$ ${(goal.valorAlvo - savedAmount).toStringAsFixed(2)} no cofrinho',
                           style: TextStyle(
                             fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                             color: reached
                                 ? AppColors.successText
                                 : AppColors.textSecondary,
                           ),
                         ),
+                        if (canBuy) ...[
+                          const SizedBox(height: 12),
+                          FlatButton(
+                            text: 'Confirmar compra',
+                            backgroundColor: AppColors.primary,
+                            fontSize: 13,
+                            isExpanded: true,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            onPressed: () async {
+                              final confirmed = await showDialog<bool>(
+                                context: context,
+                                builder: (dialogContext) => AlertDialog(
+                                  backgroundColor: AppColors.surface,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.borderRadius,
+                                    ),
+                                  ),
+                                  title: const Text(
+                                    'Confirmar compra?',
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.text,
+                                    ),
+                                  ),
+                                  content: Text(
+                                    'Deseja comprar "${goal.titulo}" e extrair R\$ ${goal.valorAlvo.toStringAsFixed(2)} do seu cofrinho?',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(dialogContext, false),
+                                      child: const Text('Cancelar'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(dialogContext, true),
+                                      child: const Text(
+                                        'Confirmar',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              if (confirmed == true && context.mounted) {
+                                state.comprarMeta(goal.id);
+                                FlatSnackBar.show(
+                                  context,
+                                  message:
+                                      'Compra de "${goal.titulo}" confirmada! -R\$ ${goal.valorAlvo.toStringAsFixed(2)} do cofrinho.',
+                                  type: FlatSnackBarType.success,
+                                );
+                              }
+                            },
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -373,6 +424,8 @@ class ChildWishlistTab extends StatelessWidget {
           ],
         ),
       ),
+        );
+      },
     );
   }
 }

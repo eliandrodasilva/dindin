@@ -525,4 +525,45 @@ class AppState extends ChangeNotifier {
     _goals.add(newGoal);
     notifyListeners();
   }
+
+  void comprarMeta(String goalId) {
+    final goalIndex = _goals.indexWhere((g) => g.id == goalId);
+    if (goalIndex == -1) return;
+
+    final goal = _goals[goalIndex];
+    if (goal.comprado) return;
+
+    final childIndex = _users.indexWhere((u) => u.id == goal.childId);
+    if (childIndex == -1) return;
+
+    final childUser = _users[childIndex];
+    if (childUser.saldo < goal.valorAlvo) return;
+
+    _users[childIndex] = childUser.copyWith(
+      saldo: childUser.saldo - goal.valorAlvo,
+    );
+    if (_currentUser.id == childUser.id) {
+      _currentUser = _users[childIndex];
+    }
+
+    _goals[goalIndex] = goal.copyWith(
+      comprado: true,
+      valorAtual: goal.valorAlvo,
+    );
+
+    _transactions.insert(
+      0,
+      Transaction(
+        id: 'tx-${DateTime.now().microsecondsSinceEpoch}',
+        titulo: 'Compra: ${goal.titulo}',
+        valor: goal.valorAlvo,
+        data: DateTime.now(),
+        tipo: TransactionType.debito,
+        childId: goal.childId,
+        origem: TransactionSource.outro,
+      ),
+    );
+
+    notifyListeners();
+  }
 }

@@ -5,6 +5,7 @@ class Goal {
     required this.valorAlvo,
     required this.valorAtual,
     required this.childId,
+    this.comprado = false,
   });
 
   final String id;
@@ -12,6 +13,7 @@ class Goal {
   final double valorAlvo;
   final double valorAtual;
   final String childId;
+  final bool comprado;
 
   double get progresso =>
       valorAlvo <= 0 ? 0.0 : (valorAtual / valorAlvo).clamp(0.0, 1.0);
@@ -24,6 +26,7 @@ class Goal {
     double? valorAlvo,
     double? valorAtual,
     String? childId,
+    bool? comprado,
   }) {
     return Goal(
       id: id ?? this.id,
@@ -31,6 +34,7 @@ class Goal {
       valorAlvo: valorAlvo ?? this.valorAlvo,
       valorAtual: valorAtual ?? this.valorAtual,
       childId: childId ?? this.childId,
+      comprado: comprado ?? this.comprado,
     );
   }
 }
