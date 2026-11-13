@@ -8,7 +8,7 @@ class TaskProgressSummaryCard extends StatelessWidget {
   const TaskProgressSummaryCard({
     super.key,
     required this.summary,
-    this.title = 'MÉDIA & PROGRESSÃO DIÁRIA',
+    this.title = 'Resumo das tarefas',
   });
 
   final TaskSummary summary;
@@ -25,13 +25,13 @@ class TaskProgressSummaryCard extends StatelessWidget {
         Text(
           title,
           style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-            color: AppColors.textSecondary,
-            letterSpacing: 0.6,
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+            color: AppColors.text,
+            letterSpacing: -0.3,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
         FlatCard(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -43,31 +43,36 @@ class TaskProgressSummaryCard extends StatelessWidget {
                     child: _MetricTile(
                       label: 'Completadas',
                       value: '${summary.completedCount}',
-                      color: AppColors.successText,
-                      bgColor: AppColors.successSubtle,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  Container(
+                    width: 1,
+                    height: 32,
+                    color: AppColors.border,
+                  ),
                   Expanded(
                     child: _MetricTile(
                       label: 'Abertas',
                       value: '${summary.openCount}',
-                      color: AppColors.warningText,
-                      bgColor: AppColors.warningSubtle,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  Container(
+                    width: 1,
+                    height: 32,
+                    color: AppColors.border,
+                  ),
                   Expanded(
                     child: _MetricTile(
                       label: 'Média',
                       value: '$avgPercent%',
-                      color: AppColors.infoText,
-                      bgColor: AppColors.infoSubtle,
+                      highlight: true,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
+              const Divider(height: 1, thickness: 1, color: AppColors.border),
+              const SizedBox(height: 14),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -86,8 +91,8 @@ class TaskProgressSummaryCard extends StatelessWidget {
                     '${summary.dailyCompleted}/${summary.dailyTotal} ($dailyPercent%)',
                     style: const TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primaryAccent,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
                     ),
                   ),
                 ],
@@ -97,10 +102,10 @@ class TaskProgressSummaryCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppTheme.borderRadiusPill),
                 child: LinearProgressIndicator(
                   value: summary.dailyProgress,
-                  minHeight: 8,
-                  backgroundColor: AppColors.surfaceSubtle,
+                  minHeight: 6,
+                  backgroundColor: AppColors.border,
                   valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.primaryAccent,
+                    AppColors.primary,
                   ),
                 ),
               ),
@@ -116,45 +121,36 @@ class _MetricTile extends StatelessWidget {
   const _MetricTile({
     required this.label,
     required this.value,
-    required this.color,
-    required this.bgColor,
+    this.highlight = false,
   });
 
   final String label;
   final String value;
-  final Color color;
-  final Color bgColor;
+  final bool highlight;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-      ),
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              color: color,
-              letterSpacing: -0.3,
-            ),
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: highlight ? AppColors.primary : AppColors.text,
+            letterSpacing: -0.3,
           ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: color,
-            ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: AppColors.textSecondary,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

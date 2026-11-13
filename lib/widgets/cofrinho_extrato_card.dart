@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_theme.dart';
 import 'flat_card.dart';
 
 class CofrinhoExtratoCard extends StatelessWidget {
   const CofrinhoExtratoCard({
     super.key,
     required this.transactions,
-    this.title = 'Extrato do Cofrinho',
+    this.title = 'Extrato do cofrinho',
   });
 
   final List<Transaction> transactions;
@@ -27,76 +26,51 @@ class CofrinhoExtratoCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          title.toUpperCase(),
+          title,
           style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-            color: AppColors.textSecondary,
-            letterSpacing: 0.6,
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+            color: AppColors.text,
+            letterSpacing: -0.3,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
         if (transactions.isEmpty)
           const FlatCard(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: Text(
-                  'Nenhuma movimentação no cofrinho ainda.',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: AppColors.textMuted,
-                  ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                'Nenhuma movimentação no cofrinho ainda.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textSecondary,
                 ),
               ),
             ),
           )
         else
           FlatCard(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Column(
               children: List.generate(transactions.length, (index) {
                 final tx = transactions[index];
                 final isLast = index == transactions.length - 1;
-                final (badgeBg, badgeFg, icon) = switch (tx.origem) {
-                  TransactionSource.mesada => (
-                      AppColors.infoSubtle,
-                      AppColors.infoText,
-                      Icons.calendar_month_rounded,
-                    ),
-                  TransactionSource.tarefa => (
-                      AppColors.successSubtle,
-                      AppColors.successText,
-                      Icons.task_alt_rounded,
-                    ),
-                  TransactionSource.saldoInicial => (
-                      AppColors.surfaceSubtle,
-                      AppColors.textSecondary,
-                      Icons.savings_outlined,
-                    ),
-                  TransactionSource.outro => (
-                      AppColors.warningSubtle,
-                      AppColors.warningText,
-                      Icons.swap_horiz_rounded,
-                    ),
+                final icon = switch (tx.origem) {
+                  TransactionSource.mesada => Icons.calendar_today_outlined,
+                  TransactionSource.tarefa => Icons.task_alt_outlined,
+                  TransactionSource.saldoInicial => Icons.savings_outlined,
+                  TransactionSource.outro => Icons.swap_horiz_rounded,
                 };
 
                 return Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Row(
                         children: [
-                          Container(
-                            width: 38,
-                            height: 38,
-                            decoration: BoxDecoration(
-                              color: badgeBg,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(icon, size: 18, color: badgeFg),
-                          ),
-                          const SizedBox(width: 12),
+                          Icon(icon, size: 20, color: AppColors.text),
+                          const SizedBox(width: 14),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,44 +78,18 @@ class CofrinhoExtratoCard extends StatelessWidget {
                                 Text(
                                   tx.titulo,
                                   style: const TextStyle(
-                                    fontSize: 13,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.text,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 4,
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 7,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: badgeBg,
-                                        borderRadius: BorderRadius.circular(
-                                            AppTheme.borderRadiusPill),
-                                      ),
-                                      child: Text(
-                                        tx.origem.label,
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w700,
-                                          color: badgeFg,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      _formatDate(tx.data),
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                        color: AppColors.textMuted,
-                                      ),
-                                    ),
-                                  ],
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${tx.origem.label} • ${_formatDate(tx.data)}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.textSecondary,
+                                  ),
                                 ),
                               ],
                             ),
@@ -151,9 +99,9 @@ class CofrinhoExtratoCard extends StatelessWidget {
                             '${tx.isCredito ? '+' : '-'} R\$ ${tx.valor.toStringAsFixed(2)}',
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w600,
                               color: tx.isCredito
-                                  ? AppColors.successText
+                                  ? AppColors.text
                                   : AppColors.alertText,
                             ),
                           ),
@@ -164,7 +112,7 @@ class CofrinhoExtratoCard extends StatelessWidget {
                       const Divider(
                         height: 1,
                         thickness: 1,
-                        color: AppColors.borderSubtle,
+                        color: AppColors.border,
                       ),
                   ],
                 );
