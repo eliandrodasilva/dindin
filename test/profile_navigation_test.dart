@@ -27,9 +27,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(ParentHomeTab), findsOneWidget);
-    expect(find.text('FILHOS CONECTADOS'), findsOneWidget);
-    expect(find.text('MÉDIA & PROGRESSÃO DIÁRIA'), findsOneWidget);
-    expect(find.text('TAREFAS ATIVAS'), findsOneWidget);
+    expect(find.text('Filhos conectados'), findsOneWidget);
+    expect(find.text('Resumo das tarefas'), findsOneWidget);
+    expect(find.text('Tarefas ativas'), findsOneWidget);
 
     // 3. Navigate Parent bottom bar tabs: Tarefas, Filhos, Config., Perfil
     await tester.tap(find.text('Tarefas'));
@@ -39,8 +39,8 @@ void main() {
     await tester.tap(find.text('Filhos'));
     await tester.pumpAndSettle();
     expect(find.byType(ParentChildrenTab), findsOneWidget);
-    expect(find.textContaining('MESADA POR MÊS'), findsOneWidget);
-    expect(find.textContaining('EXTRATO DO COFRINHO'), findsOneWidget);
+    expect(find.textContaining('Mesada por mês'), findsOneWidget);
+    expect(find.textContaining('Extrato do cofrinho'), findsOneWidget);
 
     await tester.tap(find.text('Config.'));
     await tester.pumpAndSettle();
@@ -73,7 +73,7 @@ void main() {
     await tester.tap(find.text('Desejos'));
     await tester.pumpAndSettle();
     expect(find.byType(ChildWishlistTab), findsOneWidget);
-    expect(find.text('LISTA DE DESEJOS & METAS'), findsOneWidget);
+    expect(find.text('Lista de desejos e metas'), findsOneWidget);
 
     await tester.tap(find.text('Config.'));
     await tester.pumpAndSettle();

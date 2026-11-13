@@ -55,44 +55,66 @@ class _HomePageState extends State<HomePage> {
             _ => const SettingsBlankTab(),
           };
 
+    final showHeader = _currentIndex != 4;
+
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: _currentIndex == 4
-          ? null
-          : AppBar(
-              backgroundColor: AppColors.background,
-              elevation: 0,
-              scrolledUnderElevation: 0,
-              centerTitle: true,
-              title: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(7),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.savings_rounded,
-                      color: AppColors.surface,
-                      size: 18,
-                    ),
+      body: Column(
+        children: [
+          if (showHeader)
+            Container(
+              width: double.infinity,
+              color: AppColors.primary,
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 16),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => setState(() => _currentIndex = 3),
+                        child: Container(
+                          width: 42,
+                          height: 42,
+                          decoration: const BoxDecoration(
+                            color: AppColors.primaryLight,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.person_outline_rounded,
+                            color: AppColors.surface,
+                            size: 22,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'Olá, ${currentUser.nome}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: AppColors.surface,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 9),
-                  const Text(
-                    'DinDin',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                      color: AppColors.text,
-                      letterSpacing: -0.4,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-      body: SafeArea(child: body),
+          Expanded(
+            child: SafeArea(
+              top: !showHeader,
+              bottom: false,
+              child: body,
+            ),
+          ),
+        ],
+      ),
       bottomNavigationBar: DinDinBottomBar(
         isParent: isParent,
         currentIndex: _currentIndex,
