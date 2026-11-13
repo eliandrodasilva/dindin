@@ -34,128 +34,149 @@ class ParentHomeTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Text(
-            'FILHOS CONECTADOS',
+            'Filhos conectados',
             style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textSecondary,
-              letterSpacing: 0.6,
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+              color: AppColors.text,
+              letterSpacing: -0.3,
             ),
           ),
           const SizedBox(height: 10),
           if (children.isEmpty)
-            const FlatCard(
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 'Nenhum filho conectado.',
-                style: TextStyle(color: AppColors.textMuted),
+                style: TextStyle(color: AppColors.textSecondary),
               ),
             )
           else
-            Column(
-              children: children.map((child) {
-                final childActiveCount = state
-                    .tasksForChild(child.id)
-                    .where((t) => t.isActive)
-                    .length;
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: FlatCard(
-                    padding: const EdgeInsets.all(14),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundColor: AppColors.primaryAccent,
-                          child: Text(
-                            child.nome.substring(0, 1).toUpperCase(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.surface,
+            FlatCard(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: Column(
+                children: List.generate(children.length, (index) {
+                  final child = children[index];
+                  final isLast = index == children.length - 1;
+                  final childActiveCount = state
+                      .tasksForChild(child.id)
+                      .where((t) => t.isActive)
+                      .length;
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.person_outline_rounded,
+                              size: 20,
+                              color: AppColors.text,
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                child.nome,
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.text,
-                                ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    child.nome,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.text,
+                                    ),
+                                  ),
+                                  Text(
+                                    '$childActiveCount ${childActiveCount == 1 ? 'tarefa ativa' : 'tarefas ativas'}',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                '$childActiveCount ${childActiveCount == 1 ? 'tarefa ativa' : 'tarefas ativas'}',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.textSecondary,
-                                ),
+                            ),
+                            Text(
+                              'R\$ ${child.saldo.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.text,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        CurrencyBadge(amount: child.saldo),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
+                      ),
+                      if (!isLast)
+                        const Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: AppColors.border,
+                        ),
+                    ],
+                  );
+                }),
+              ),
             ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 20),
           TaskProgressSummaryCard(summary: summary),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'TAREFAS ATIVAS',
+                'Tarefas ativas',
                 style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textSecondary,
-                  letterSpacing: 0.6,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.text,
+                  letterSpacing: -0.3,
                 ),
               ),
               Text(
                 '${activeTasks.length}',
                 style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
                   color: AppColors.textSecondary,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           if (activeTasks.isEmpty)
-            const FlatCard(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 14),
-                child: Text(
-                  'Nenhuma tarefa ativa no momento.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 13, color: AppColors.textMuted),
-                ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 14),
+              child: Text(
+                'Nenhuma tarefa ativa no momento.',
+                style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
               ),
             )
           else
-            ...activeTasks.map((task) {
-              final child = state.users
-                  .where((u) => u.id == task.atribuidaA)
-                  .firstOrNull;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: _ParentTaskCard(
-                  task: task,
-                  childName: child?.nome ?? 'Filha',
-                  state: state,
-                ),
-              );
-            }),
+            Column(
+              children: List.generate(activeTasks.length, (index) {
+                final task = activeTasks[index];
+                final isLast = index == activeTasks.length - 1;
+                final child = state.users
+                    .where((u) => u.id == task.atribuidaA)
+                    .firstOrNull;
+                return Column(
+                  children: [
+                    _ParentTaskCard(
+                      task: task,
+                      childName: child?.nome ?? 'Filha',
+                      state: state,
+                    ),
+                    if (!isLast)
+                      const Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: AppColors.border,
+                      ),
+                  ],
+                );
+              }),
+            ),
         ],
       ),
     );
@@ -405,7 +426,7 @@ class _ParentChildrenTabState extends State<ParentChildrenTab> {
             const SizedBox(height: 18),
             CofrinhoExtratoCard(
               transactions: widget.state.transactionsForChild(selectedChild.id),
-              title: 'Extrato do Cofrinho • ${selectedChild.nome}',
+              title: 'Extrato do cofrinho • ${selectedChild.nome}',
             ),
           ],
         ],
@@ -481,18 +502,8 @@ class _ParentTaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (statusBg, statusFg) = switch (task.status) {
-      TaskStatus.pending => (AppColors.surfaceSubtle, AppColors.textSecondary),
-      TaskStatus.waitingApproval => (
-        AppColors.warningSubtle,
-        AppColors.warningText,
-      ),
-      TaskStatus.completed => (AppColors.successSubtle, AppColors.successText),
-      TaskStatus.cancelled => (AppColors.alertSubtle, AppColors.alertText),
-    };
-
-    return FlatCard(
-      padding: const EdgeInsets.all(14),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -500,110 +511,105 @@ class _ParentTaskCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    TaskTypeBadge(frequencia: task.frequencia),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: statusBg,
-                        borderRadius: BorderRadius.circular(
-                          AppTheme.borderRadiusPill,
-                        ),
-                      ),
-                      child: Text(
-                        task.status.label,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: statusFg,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  task.titulo,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: task.isCancelled
+                        ? AppColors.textMuted
+                        : AppColors.text,
+                    decoration:
+                        task.isCancelled ? TextDecoration.lineThrough : null,
+                  ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               Text(
                 '+ R\$ ${task.recompensa.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.successText,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.text,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Text(
-            task.titulo,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: task.isCancelled ? AppColors.textMuted : AppColors.text,
-              decoration: task.isCancelled ? TextDecoration.lineThrough : null,
-            ),
-          ),
           const SizedBox(height: 4),
-          Text(
-            'Associada a: $childName',
-            style: const TextStyle(
-              fontSize: 12,
-              color: AppColors.textSecondary,
-            ),
+          Wrap(
+            spacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              TaskTypeBadge(frequencia: task.frequencia),
+              Text(
+                '• $childName • ${task.status.label}',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: task.isWaitingApproval
+                      ? FontWeight.w600
+                      : FontWeight.w400,
+                  color: task.isWaitingApproval
+                      ? AppColors.primary
+                      : AppColors.textSecondary,
+                ),
+              ),
+            ],
           ),
           if (task.isWaitingApproval || task.isPending) ...[
-            const SizedBox(height: 12),
-            Row(
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 if (task.isWaitingApproval) ...[
-                  Expanded(
-                    child: FlatButton(
-                      text: 'Aprovar',
-                      backgroundColor: AppColors.success,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      onPressed: () {
-                        state.aprovarTarefaPeloPai(task.id);
-                        FlatSnackBar.show(
-                          context,
-                          message:
-                              'Tarefa aprovada! +R\$ ${task.recompensa.toStringAsFixed(2)} no cofrinho de $childName.',
-                          type: FlatSnackBarType.success,
-                        );
-                      },
+                  FlatButton(
+                    text: 'Aprovar',
+                    backgroundColor: AppColors.primary,
+                    fontSize: 13,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: FlatButton(
-                      text: 'Recusar',
-                      backgroundColor: AppColors.warning,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      onPressed: () => state.recusarTarefaPeloPai(task.id),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                ],
-                Expanded(
-                  child: FlatButton(
-                    text: 'Cancelar',
-                    backgroundColor: AppColors.alertSubtle,
-                    textColor: AppColors.alertText,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
                     onPressed: () {
-                      state.cancelarTarefaPeloPai(task.id);
+                      state.aprovarTarefaPeloPai(task.id);
                       FlatSnackBar.show(
                         context,
-                        message: 'Tarefa "${task.titulo}" cancelada.',
-                        type: FlatSnackBarType.info,
+                        message:
+                            'Tarefa aprovada! +R\$ ${task.recompensa.toStringAsFixed(2)} no cofrinho de $childName.',
+                        type: FlatSnackBarType.success,
                       );
                     },
                   ),
+                  FlatButton(
+                    text: 'Recusar',
+                    backgroundColor: AppColors.surfaceSubtle,
+                    textColor: AppColors.text,
+                    fontSize: 13,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    onPressed: () => state.recusarTarefaPeloPai(task.id),
+                  ),
+                ],
+                FlatButton(
+                  text: 'Cancelar',
+                  backgroundColor: AppColors.alertSubtle,
+                  textColor: AppColors.alertText,
+                  fontSize: 13,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
+                  onPressed: () {
+                    state.cancelarTarefaPeloPai(task.id);
+                    FlatSnackBar.show(
+                      context,
+                      message: 'Tarefa "${task.titulo}" cancelada.',
+                      type: FlatSnackBarType.info,
+                    );
+                  },
                 ),
               ],
             ),
